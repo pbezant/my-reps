@@ -34,9 +34,33 @@ var selected_local = '';
 var all_people = {};
 var pseudo_id = 1;
 
-var district_tags = [];
 
-function addressSearch() {
+
+var divisions, officials, offices;
+function addressSearch(address){
+
+        var address = $('#address').val();
+        // $.address.parameter('address', encodeURIComponent(address));
+        $.address.parameter('address', encodeURI(address));
+
+        var params = {
+            'address': address,
+            'key': API_KEY
+        }
+
+        $.when($.getJSON(INFO_API, params)).then(function(data){
+            divisions = data['divisions'];
+            officials = data['officials'];
+            offices = data['offices'];
+
+            draw_searchResults();
+        })
+
+}
+
+
+        
+function draw_searchResults() {
 
     // configuration for showing representatives at different levels of government
 
@@ -64,26 +88,15 @@ function addressSearch() {
         results_level_set.push('federal');
     }
 
-    $.address.parameter('results_level', results_level_set);
+//    $.address.parameter('results_level', results_level_set);
 
     // console.log('doin search')
     // console.log('local: ' + show_local)
     // console.log('county: ' + show_county)
     // console.log('state: ' + show_state)
     // console.log('federal: ' + show_federal)
-    var address = $('#address').val();
-    // $.address.parameter('address', encodeURIComponent(address));
-    $.address.parameter('address', encodeURI(address));
+    
 
-    var params = {
-        
-        'address': address,
-        'key': API_KEY
-    }
-    $.when($.getJSON(INFO_API, params)).then(function(data){
-        var divisions = data['divisions'];
-        var officials = data['officials'];
-        var offices = data['offices'];
 
         $('table tbody').empty();
 
@@ -109,7 +122,7 @@ function addressSearch() {
         else {
             setFoundDivisions(divisions);
              
-            setUserTags(divisions);
+            displayTags(setUserTags(divisions));
 
             $.each(divisions, function(division_id, division){
                 
@@ -255,7 +268,6 @@ function addressSearch() {
                 $('#contactModal').modal('show');
             })
         }
-    });
 }
 
 function findMe() {
@@ -342,7 +354,6 @@ function setUserTags(divisions){
 
     }
     
-    displayTags(district_tags);
     return district_tags;
 }
 
@@ -355,8 +366,9 @@ function displayTags(tags){
     }
     document.getElementById('tag-container').innerHTML='';
     document.getElementById('tag-container').insertAdjacentHTML('beforeend',result);  
-    return result;
+    return false;
 }
+
 function checkFederal(division_id, office_name) {
     if( division_id == federal_pattern || 
         cd_pattern.test(division_id) ||

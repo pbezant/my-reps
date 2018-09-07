@@ -55,7 +55,10 @@ gulp.task('images-deploy', function() {
 
 
 var vendor_scripts = [
+    
     'app/scripts/src/_includes/modernizr-2.6.2.min.js',
+    'app/scripts/src/_includes/jquery/dist/jquery.min.js',
+    'app/scripts/src/_includes/bootstrap/dist/js/bootstrap.bundle.min.js',
     'app/scripts/src/_includes/jquery.dataTables.min.js',
     'app/scripts/src/_includes/jquery.dataTables.sorting.js',
     'app/scripts/src/_includes/jquery.address.js',
