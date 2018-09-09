@@ -3,6 +3,9 @@ var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
 var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
 // var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
 
+var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
+var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
+
 // parsing out division IDs
 var federal_pattern = "ocd-division/country:us";
 var state_pattern = /ocd-division\/country:us\/state:(\D{2}$)/;
@@ -36,10 +39,21 @@ var pseudo_id = 1;
 
 
 
-var divisions, officials, offices;
-function addressSearch(address){
+var maps_init = function(e){
 
-        var address = $('#address').val();
+  
+
+    var params = {
+        'key':MAPS_KEY
+    }
+    $.getJSON(MAPS_API, params);
+
+}
+
+var address, divisions, officials, offices;
+function addressSearch(){
+
+        address = $('#address').val();
         // $.address.parameter('address', encodeURIComponent(address));
         $.address.parameter('address', encodeURI(address));
 
@@ -194,7 +208,7 @@ function draw_searchResults() {
                 }
             });
 
-            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
+            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key="+MAPS_KEY+"&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
 
             var template = new EJS({'text': $('#tableGuts').html()});
             
