@@ -1,57 +1,63 @@
-var geocoder = new google.maps.Geocoder;
-var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
-// var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
+jQuery(document).ready(function($) {
 
-var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
-var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
+    // var geocoder = new google.maps.Geocoder;
+    var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
+    var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    // var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
 
-// parsing out division IDs
-var federal_pattern = "ocd-division/country:us";
-var state_pattern = /ocd-division\/country:us\/state:(\D{2}$)/;
-var cd_pattern = /ocd-division\/country:us\/state:(\D{2})\/cd:/;
-var sl_pattern = /ocd-division\/country:us\/state:(\D{2})\/(sldl:|sldu:)/;
-var county_pattern = /ocd-division\/country:us\/state:\D{2}\/county:\D+/;
-var local_pattern = /ocd-division\/country:us\/state:\D{2}\/place:\D+/;
-var district_pattern = /ocd-division\/country:us\/district:\D+/;
+    var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
+    var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
 
-var federal_offices = ['United States Senate', 'United States House of Representatives']
+    // parsing out division IDs
+    var federal_pattern = "ocd-division/country:us";
+    var state_pattern = /ocd-division\/country:us\/state:(\D{2}$)/;
+    var cd_pattern = /ocd-division\/country:us\/state:(\D{2})\/cd:/;
+    var sl_pattern = /ocd-division\/country:us\/state:(\D{2})\/(sldl:|sldu:)/;
+    var county_pattern = /ocd-division\/country:us\/state:\D{2}\/county:\D+/;
+    var local_pattern = /ocd-division\/country:us\/state:\D{2}\/place:\D+/;
+    var district_pattern = /ocd-division\/country:us\/district:\D+/;
 
-var social_icon_lookup = {
-    'YouTube': 'youtube',
-    'Facebook': 'facebook',
-    'Twitter': 'twitter',
-    'GooglePlus': 'google-plus'
-};
+    var federal_offices = ['United States Senate', 'United States House of Representatives']
 
-var social_link_lookup = {
-    'YouTube': 'https://www.youtube.com/user/',
-    'Facebook': 'https://www.facebook.com/',
-    'Twitter': 'https://twitter.com/',
-    'GooglePlus': 'https://plus.google.com/'
-};
+    var social_icon_lookup = {
+        'YouTube': 'youtube',
+        'Facebook': 'facebook',
+        'Twitter': 'twitter',
+        'GooglePlus': 'google-plus'
+    };
 
-var selected_state = '';
-var selected_county = '';
-var selected_local = '';
-var all_people = {};
-var pseudo_id = 1;
+    var social_link_lookup = {
+        'YouTube': 'https://www.youtube.com/user/',
+        'Facebook': 'https://www.facebook.com/',
+        'Twitter': 'https://twitter.com/',
+        'GooglePlus': 'https://plus.google.com/'
+    };
+
+    var selected_state = '';
+    var selected_county = '';
+    var selected_local = '';
+    var all_people = {};
+    var pseudo_id = 1;
 
 
+    // var maps_init = function(e){
+    //     var params = {
+    //         'key':MAPS_KEY
+    //     }
 
-var maps_init = function(e){
+    //     document.addEventListener('DOMContentLoaded', function () {
+    //         var js_file = document.createElement('script');
+    //         js_file.type = 'text/javascript';
+    //         js_file.src = MAPS_API +"?key="+params.key;
+    //         document.getElementsByTagName('head')[0].appendChild(js_file);
+    //     }
 
-  
 
-    var params = {
-        'key':MAPS_KEY
-    }
-    $.getJSON(MAPS_API, params);
+    // }
 
-}
+    var address, divisions, officials, offices;
 
-var address, divisions, officials, offices;
-function addressSearch(){
+    function addressSearch() {
 
         address = $('#address').val();
         // $.address.parameter('address', encodeURIComponent(address));
@@ -62,7 +68,7 @@ function addressSearch(){
             'key': API_KEY
         }
 
-        $.when($.getJSON(INFO_API, params)).then(function(data){
+        $.when($.getJSON(INFO_API, params)).then(function(data) {
             divisions = data['divisions'];
             officials = data['officials'];
             offices = data['offices'];
@@ -70,46 +76,46 @@ function addressSearch(){
             draw_searchResults();
         })
 
-}
-
-
-        
-function draw_searchResults() {
-
-    // configuration for showing representatives at different levels of government
-
-    var show_local   = false;
-    var show_county  = false;
-    var show_state   = false;
-    var show_federal = false;
-
-    var results_level_set = [];
-    // set levels from checkboxes
-    if ($('#show_local_results').is(':checked')) {
-        show_local = true;
-        results_level_set.push('local');
-    }
-    if ($('#show_county_results').is(':checked')) {
-        show_county = true;
-        results_level_set.push('county');
-    }
-    if ($('#show_state_results').is(':checked')) {
-        show_state = true;
-        results_level_set.push('state');
-    }
-    if ($('#show_federal_results').is(':checked')) {
-        show_federal = true;
-        results_level_set.push('federal');
     }
 
-//    $.address.parameter('results_level', results_level_set);
 
-    // console.log('doin search')
-    // console.log('local: ' + show_local)
-    // console.log('county: ' + show_county)
-    // console.log('state: ' + show_state)
-    // console.log('federal: ' + show_federal)
-    
+
+    function draw_searchResults() {
+
+        // configuration for showing representatives at different levels of government
+
+        var show_local = false;
+        var show_county = false;
+        var show_state = false;
+        var show_federal = false;
+
+        var results_level_set = [];
+        // set levels from checkboxes
+        if ($('#show_local_results').is(':checked')) {
+            show_local = true;
+            results_level_set.push('local');
+        }
+        if ($('#show_county_results').is(':checked')) {
+            show_county = true;
+            results_level_set.push('county');
+        }
+        if ($('#show_state_results').is(':checked')) {
+            show_state = true;
+            results_level_set.push('state');
+        }
+        if ($('#show_federal_results').is(':checked')) {
+            show_federal = true;
+            results_level_set.push('federal');
+        }
+
+        //    $.address.parameter('results_level', results_level_set);
+
+        // console.log('doin search')
+        // console.log('local: ' + show_local)
+        // console.log('county: ' + show_county)
+        // console.log('state: ' + show_state)
+        // console.log('federal: ' + show_federal)
+
 
 
         $('table tbody').empty();
@@ -132,20 +138,19 @@ function draw_searchResults() {
         if (divisions === undefined) {
             $("#no-response-container").show();
             $("#response-container").hide();
-        }
-        else {
+        } else {
             setFoundDivisions(divisions);
-             
+
             displayTags(setUserTags(divisions));
 
-            $.each(divisions, function(division_id, division){
-                
-                if (typeof division.officeIndices !== 'undefined'){
-                    
-                    $.each(division.officeIndices, function(i, office){
+            $.each(divisions, function(division_id, division) {
+
+                if (typeof division.officeIndices !== 'undefined') {
+
+                    $.each(division.officeIndices, function(i, office) {
                         var office_name = offices[office];
 
-                        $.each(offices[office]['officialIndices'], function(i, official){
+                        $.each(offices[office]['officialIndices'], function(i, official) {
                             var info = {
                                 'person': null,
                                 'office': office_name,
@@ -162,9 +167,9 @@ function draw_searchResults() {
                             var person = officials[official];
                             info['person'] = person;
 
-                            if (typeof person.channels !== 'undefined'){
+                            if (typeof person.channels !== 'undefined') {
                                 var channels = [];
-                                $.each(person.channels, function(i, channel){
+                                $.each(person.channels, function(i, channel) {
                                     if (channel.type != 'GooglePlus' && channel.type != 'YouTube') {
                                         channel['icon'] = social_icon_lookup[channel.type];
                                         channel['link'] = social_link_lookup[channel.type] + channel['id'];
@@ -173,26 +178,26 @@ function draw_searchResults() {
                                 });
                                 info['channels'] = channels;
                             }
-                            if (typeof person.address !== 'undefined'){
+                            if (typeof person.address !== 'undefined') {
                                 info['address'] = person.address;
                             }
-                            if (typeof person.phones !== 'undefined'){
+                            if (typeof person.phones !== 'undefined') {
                                 info['phones'] = person.phones;
                             }
-                            if (typeof person.urls !== 'undefined'){
+                            if (typeof person.urls !== 'undefined') {
                                 info['urls'] = person.urls;
                             }
-                            if (typeof person.emails !== 'undefined'){
+                            if (typeof person.emails !== 'undefined') {
                                 info['emails'] = person.emails;
                             }
 
-                            if(checkFederal(division_id, office_name)) {
+                            if (checkFederal(division_id, office_name)) {
                                 info['jurisdiction'] = 'Federal Government';
                                 federal_people.push(info);
                             } else if (checkState(division_id)) {
                                 info['jurisdiction'] = selected_state;
                                 state_people.push(info);
-                            } else if (checkCounty(division_id)){
+                            } else if (checkCounty(division_id)) {
                                 info['jurisdiction'] = selected_county;
                                 county_people.push(info);
                             } else {
@@ -208,14 +213,14 @@ function draw_searchResults() {
                 }
             });
 
-            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key="+MAPS_KEY+"&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
+            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + MAPS_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
 
-            var template = new EJS({'text': $('#tableGuts').html()});
-            
+            var template = new EJS({ 'text': $('#tableGuts').html() });
+
             if (show_federal) {
                 $('#federal-container').show();
                 $('#fed-nav').show();
-                $('#federal-results tbody').append(template.render({people: federal_people}));
+                $('#federal-results tbody').append(template.render({ people: federal_people }));
             } else {
                 $('#federal-container').hide()
                 $('#fed-nav').hide();
@@ -226,11 +231,11 @@ function draw_searchResults() {
                 $('#state-nav').show();
                 if (state_people.length == 0)
                     $('#state-container').hide();
-                $('#state-results tbody').append(template.render({people: state_people}));
+                $('#state-results tbody').append(template.render({ people: state_people }));
             } else {
                 $('#state-container').hide()
                 $('#state-nav').hide();
-            }                
+            }
 
             if (show_county) {
                 if (county_people.length == 0) {
@@ -239,31 +244,29 @@ function draw_searchResults() {
                         $('#county-container-not-found').hide();
                     else
                         $('#county-container-not-found').show();
-                }
-                else {
+                } else {
                     $('#county-container').show();
                     $('#county-container-not-found').hide();
                 }
 
-                $('#county-results tbody').append(template.render({people: county_people}));
+                $('#county-results tbody').append(template.render({ people: county_people }));
             } else {
                 $('#county-container').hide()
                 $('#county-nav').hide();
-            }  
+            }
 
-            if (show_local) {    
+            if (show_local) {
                 if (local_people.length == 0) {
                     $('#local-container').hide();
                     if (selected_local == '')
                         $('#local-container-not-found').hide();
                     else
                         $('#local-container-not-found').show();
-                }
-                else {
+                } else {
                     $('#local-container').show();
                     $('#local-container-not-found').hide();
                 }
-                $('#local-results tbody').append(template.render({people: local_people}));   
+                $('#local-results tbody').append(template.render({ people: local_people }));
             } else {
                 $('#local-container').hide()
                 $('#local-nav').hide();
@@ -273,165 +276,166 @@ function draw_searchResults() {
             $("#no-response-container").hide();
 
             // hook up modal stuff
-            var modal_template = new EJS({'text': $('#modalGuts').html()});
+            var modal_template = new EJS({ 'text': $('#modalGuts').html() });
             $('.btn-contact').off('click');
-            $('.btn-contact').on('click', function(){
+            $('.btn-contact').on('click', function() {
                 var info = all_people[$(this).data('id')];
                 $('#contactModalLabel').html("Contact " + info.person.name);
-                $('#modalContent').html(modal_template.render({info: info}));
+                $('#modalContent').html(modal_template.render({ info: info }));
                 $('#contactModal').modal('show');
             })
         }
-}
+    }
 
-function findMe() {
-    var foundLocation;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            var accuracy = position.coords.accuracy;
-            var coords = new google.maps.LatLng(latitude, longitude);
+    function findMe() {
+        var foundLocation;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
+                var coords = new google.maps.LatLng(latitude, longitude);
 
-            // console.log(coords);
+                // console.log(coords);
 
-            geocoder.geocode({
-                'location': coords
-            }, function (results, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-                        $("#address").val(results[1].formatted_address);
-                        addressSearch();
+                geocoder.geocode({
+                    'location': coords
+                }, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[1]) {
+                            $("#address").val(results[1].formatted_address);
+                            addressSearch();
+                        }
                     }
-                }
+                });
+
+            }, function error(msg) {
+                alert('Please enable your GPS position feature.');
+            }, {
+                //maximumAge: 600000,
+                //timeout: 5000,
+                enableHighAccuracy: true
             });
+        } else {
+            alert("Geolocation API is not supported in your browser.");
+        }
+    };
 
-        }, function error(msg) {
-            alert('Please enable your GPS position feature.');
-        }, {
-            //maximumAge: 600000,
-            //timeout: 5000,
-            enableHighAccuracy: true
+    function setFoundDivisions(divisions) {
+
+        // reset the labels
+        $("#state-nav").hide();
+        $("#county-nav").hide();
+        $("#local-nav").hide();
+
+        // console.log(divisions)
+        $.each(divisions, function(division_id, division) {
+            if (state_pattern.test(division_id)) {
+                selected_state = division.name;
+                $("[id^=state-name]").html(selected_state);
+                $("#state-nav").show();
+            }
+            if (county_pattern.test(division_id)) {
+                selected_county = division.name;
+                $("[id^=county-name]").html(selected_county);
+                $("#county-nav").show();
+            }
+            if (local_pattern.test(division_id) || district_pattern.test(division_id)) {
+                selected_local = division.name;
+                $("[id^=local-name]").html(selected_local);
+                $("#local-nav").show();
+            }
+            // if (sl_pattern.test(division_id)) {
+            //     selected_local = division.name;
+            //     $("[id^=local-name]").html(selected_local);
+            //     $("#local-nav").show();
+            // }
         });
-    } else {
-        alert("Geolocation API is not supported in your browser.");
     }
-};
 
-function setFoundDivisions(divisions){
-    
-    // reset the labels
-    $("#state-nav").hide();
-    $("#county-nav").hide();
-    $("#local-nav").hide();
+    var district_tags = {};
 
-    // console.log(divisions)
-    $.each(divisions, function(division_id, division){
-        if (state_pattern.test(division_id)) {
-            selected_state = division.name;
-            $("[id^=state-name]").html(selected_state);
-            $("#state-nav").show();
+    function setUserTags(divisions) {
+        for (var division in divisions) {
+
+            var district_tag = division.split("/");
+            district_tag = district_tag[district_tag.length - 1];
+            district_tag = district_tag.split(":");
+
+            if (district_tag[0] == 'sldu') {
+                district_tag[0] = 'slsd'; // state level Senate district
+            } else if (district_tag[0] == 'sldl') {
+                district_tag[0] = 'slcd'; //state level Congressional district   
+            }
+            district_tags[district_tag[0]] = district_tag[1];
+
+
         }
-        if (county_pattern.test(division_id)) {
-            selected_county = division.name;
-            $("[id^=county-name]").html(selected_county);
-            $("#county-nav").show();
-        }
-        if (local_pattern.test(division_id) || district_pattern.test(division_id)) {
-            selected_local = division.name;
-            $("[id^=local-name]").html(selected_local);
-            $("#local-nav").show();
-        }
-        // if (sl_pattern.test(division_id)) {
-        //     selected_local = division.name;
-        //     $("[id^=local-name]").html(selected_local);
-        //     $("#local-nav").show();
-        // }
-    });
-}
 
-var district_tags = {};
-function setUserTags(divisions){
-    for (var division in divisions){
-            
-        var district_tag=division.split("/");
-        district_tag = district_tag[district_tag.length-1];
-        district_tag = district_tag.split(":");
-
-        if(district_tag[0] == 'sldu'){
-            district_tag[0] ='slsd'; // state level Senate district
-        }else if(district_tag[0]=='sldl'){
-            district_tag[0] = 'slcd'; //state level Congressional district   
-        }
-        district_tags[district_tag[0]]=district_tag[1];
-        
-
+        return district_tags;
     }
-    
-    return district_tags;
-}
 
-function displayTags(tags){
-    var result = "";
-    for (var p in tags) {
-        if( tags.hasOwnProperty(p) ) {
-          result +="<div id='"+p+"' class='badge badge-pill badge-primary p-3'>" + p + " : " + tags[p] + "</div>";
-        } 
+    function displayTags(tags) {
+        var result = "";
+        for (var p in tags) {
+            if (tags.hasOwnProperty(p)) {
+                result += "<div id='" + p + "' class='badge badge-pill badge-primary p-3'>" + p + " : " + tags[p] + "</div>";
+            }
+        }
+        document.getElementById('tag-container').innerHTML = '';
+        document.getElementById('tag-container').insertAdjacentHTML('beforeend', result);
+        return false;
     }
-    document.getElementById('tag-container').innerHTML='';
-    document.getElementById('tag-container').insertAdjacentHTML('beforeend',result);  
-    return false;
-}
 
-function checkFederal(division_id, office_name) {
-    if( division_id == federal_pattern || 
-        cd_pattern.test(division_id) ||
-        federal_offices.indexOf(office_name.name) >= 0)
-        return true;
-    else
-        return false; 
-}
+    function checkFederal(division_id, office_name) {
+        if (division_id == federal_pattern ||
+            cd_pattern.test(division_id) ||
+            federal_offices.indexOf(office_name.name) >= 0)
+            return true;
+        else
+            return false;
+    }
 
-function checkState(division_id){
-    if( state_pattern.test(division_id) ||
-        sl_pattern.test(division_id))
-        return true;
-    else
-        return false; 
-}
+    function checkState(division_id) {
+        if (state_pattern.test(division_id) ||
+            sl_pattern.test(division_id))
+            return true;
+        else
+            return false;
+    }
 
-function checkCounty(division_id){
-    if( county_pattern.test(division_id))
-        return true;
-    else
-        return false; 
-}
+    function checkCounty(division_id) {
+        if (county_pattern.test(division_id))
+            return true;
+        else
+            return false;
+    }
 
-function formatParty(party) {
-    if (party) {
-        if (party == 'Unknown')
+    function formatParty(party) {
+        if (party) {
+            if (party == 'Unknown')
+                return '';
+
+            var party_letter = party.charAt(0);
+            var css_class = 'label-ind';
+            if (party_letter == 'D')
+                css_class = 'label-dem';
+            else if (party_letter == 'R')
+                css_class = 'label-rep';
+
+            return "(<span title='" + party + "' class='" + css_class + "'>" + party_letter + "</span>)";
+        } else
             return '';
-
-        var party_letter = party.charAt(0);
-        var css_class ='label-ind';
-        if (party_letter == 'D')
-            css_class ='label-dem';
-        else if (party_letter == 'R')
-            css_class ='label-rep';
-
-        return "(<span title='" + party + "' class='" + css_class + "'>" + party_letter + "</span>)";
     }
-    else
-        return '';
-}
 
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    }
 
-//converts a slug or query string in to readable text
-function convertToPlainString(text) {
-    if (text === undefined) return '';
-    return decodeURIComponent(text);
-}
+    //converts a slug or query string in to readable text
+    function convertToPlainString(text) {
+        if (text === undefined) return '';
+        return decodeURIComponent(text);
+    }
+
+});

@@ -21,6 +21,8 @@ plumber     = require('gulp-plumber');
 var browserify  = require('gulp-browserify');
 var rename = require('gulp-rename');
 
+var APP_NAME ="rep_lookup";
+
 gulp.task('browserSync', function() {
     browserSync({
         server: {
@@ -57,7 +59,6 @@ gulp.task('images-deploy', function() {
 var vendor_scripts = [
     
     'app/scripts/src/_includes/modernizr-2.6.2.min.js',
-    'app/scripts/src/_includes/jquery/dist/jquery.min.js',
     'app/scripts/src/_includes/bootstrap/dist/js/bootstrap.bundle.min.js',
     'app/scripts/src/_includes/jquery.dataTables.min.js',
     'app/scripts/src/_includes/jquery.dataTables.sorting.js',
@@ -79,7 +80,7 @@ gulp.task('scripts', function() {
                 //this is the filename of the compressed version of our JS
                 .pipe(concat('rep_lookup.js'))
                 //compress :D
-                .pipe(uglify())
+                // .pipe(uglify())
                 //catch errors
                 .on('error', gutil.log)
                 //where we will store our finalized, compressed script
@@ -92,14 +93,29 @@ gulp.task('scripts', function() {
 gulp.task('scripts-deploy', function() {
     //this is where our dev JS scripts are
     return gulp.src(['app/scripts/rep_lookup.js'])
-                //prevent pipe breaking caused by errors from gulp plugins
-                .pipe(plumber())
-                //this is the filename of the compressed version of our JS
-                .pipe(concat('rep_lookup.js'))
-                //compress :D
-                .pipe(uglify())
-                //where we will store our finalized, compressed script
-                .pipe(gulp.dest('dist/scripts'));
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        //this is the filename of the compressed version of our JS
+        .pipe(concat('rep_lookup.js'))
+        //compress :D
+        .pipe(uglify())
+        //where we will store our finalized, compressed script
+        .pipe(gulp.dest('dist/scripts'));
+
+   
+});
+
+
+gulp.task('build-wp-plugin', function(){
+     gulp.src('dist/scripts/rep_lookup.js')
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(gulp.dest('wp_rep_lookup/public/js'));
+
+    gulp.src('dist/styles/rep_lookup.css')
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(gulp.dest('wp_rep_lookup/public/css'));
 });
 
 //compiling our SCSS files
@@ -129,7 +145,7 @@ gulp.task('styles', function() {
                 //catch errors
                 .on('error', gutil.log)
                 //the final filename of our combined css file
-                .pipe(concat('styles.css'))
+                .pipe(concat(APP_NAME+'.css'))
                 //get our sources via sourceMaps
                 .pipe(sourceMaps.write())
                 //where to save our final, compressed css file
@@ -154,11 +170,13 @@ gulp.task('styles-deploy', function() {
                   cascade:  true
                 }))
                 //the final filename of our combined css file
-                .pipe(concat('styles.css'))
+                .pipe(concat(APP_NAME+'.css'))
                 .pipe(minifyCSS())
                 //where to save our final, compressed css file
                 .pipe(gulp.dest('dist/styles'));
 });
+
+
 
 //basically just keeping an eye on all HTML files
 gulp.task('html', function() {
@@ -230,4 +248,4 @@ gulp.task('default', ['browserSync', 'scripts', 'styles'], function() {
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts-deploy', 'styles-deploy', 'images-deploy'], 'html-deploy'));
+gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts-deploy', 'styles-deploy', 'images-deploy'], 'html-deploy', 'build-wp-plugin'));
