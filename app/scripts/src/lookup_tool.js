@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+    var $ = jQuery.noConflict();
 
     // var geocoder = new google.maps.Geocoder;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
@@ -39,21 +39,6 @@ jQuery(document).ready(function($) {
     var all_people = {};
     var pseudo_id = 1;
 
-
-    // var maps_init = function(e){
-    //     var params = {
-    //         'key':MAPS_KEY
-    //     }
-
-    //     document.addEventListener('DOMContentLoaded', function () {
-    //         var js_file = document.createElement('script');
-    //         js_file.type = 'text/javascript';
-    //         js_file.src = MAPS_API +"?key="+params.key;
-    //         document.getElementsByTagName('head')[0].appendChild(js_file);
-    //     }
-
-
-    // }
 
     var address, divisions, officials, offices;
 
@@ -438,4 +423,3 @@ jQuery(document).ready(function($) {
         return decodeURIComponent(text);
     }
 
-});

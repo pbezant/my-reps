@@ -52,6 +52,11 @@ gulp.task('images-deploy', function() {
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('dist/images'));
+
+    gulp.src(['dist/images/**/*', '!app/images/README'])
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(gulp.dest('wp_rep_lookup/images'));
 });
 
 
@@ -248,4 +253,4 @@ gulp.task('default', ['browserSync', 'scripts', 'styles'], function() {
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts-deploy', 'styles-deploy', 'images-deploy'], 'html-deploy', 'build-wp-plugin'));
+gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy'], 'html-deploy', 'build-wp-plugin'));

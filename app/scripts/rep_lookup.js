@@ -1057,59 +1057,51 @@ $('#el').spin('flower', 'red');
 }));
 
 (function(){var rsplit=function(string,regex){var result=regex.exec(string),retArr=new Array(),first_idx,last_idx,first_bit;while(result!=null){first_idx=result.index;last_idx=regex.lastIndex;if((first_idx)!=0){first_bit=string.substring(0,first_idx);retArr.push(string.substring(0,first_idx));string=string.slice(first_idx)}retArr.push(result[0]);string=string.slice(result[0].length);result=regex.exec(string)}if(!string==""){retArr.push(string)}return retArr},chop=function(string){return string.substr(0,string.length-1)},extend=function(d,s){for(var n in s){if(s.hasOwnProperty(n)){d[n]=s[n]}}};EJS=function(options){options=typeof options=="string"?{view:options}:options;this.set_options(options);if(options.precompiled){this.template={};this.template.process=options.precompiled;EJS.update(this.name,this);return }if(options.element){if(typeof options.element=="string"){var name=options.element;options.element=document.getElementById(options.element);if(options.element==null){throw name+"does not exist!"}}if(options.element.value){this.text=options.element.value}else{this.text=options.element.innerHTML}this.name=options.element.id;this.type="["}else{if(options.url){options.url=EJS.endExt(options.url,this.extMatch);this.name=this.name?this.name:options.url;var url=options.url;var template=EJS.get(this.name,this.cache);if(template){return template}if(template==EJS.INVALID_PATH){return null}try{this.text=EJS.request(url+(this.cache?"":"?"+Math.random()))}catch(e){}if(this.text==null){throw ({type:"EJS",message:"There is no template at "+url})}}}var template=new EJS.Compiler(this.text,this.type);template.compile(options,this.name);EJS.update(this.name,this);this.template=template};EJS.prototype={render:function(object,extra_helpers){object=object||{};this._extra_helpers=extra_helpers;var v=new EJS.Helpers(object,extra_helpers||{});return this.template.process.call(object,object,v)},update:function(element,options){if(typeof element=="string"){element=document.getElementById(element)}if(options==null){_template=this;return function(object){EJS.prototype.update.call(_template,element,object)}}if(typeof options=="string"){params={};params.url=options;_template=this;params.onComplete=function(request){var object=eval(request.responseText);EJS.prototype.update.call(_template,element,object)};EJS.ajax_request(params)}else{element.innerHTML=this.render(options)}},out:function(){return this.template.out},set_options:function(options){this.type=options.type||EJS.type;this.cache=options.cache!=null?options.cache:EJS.cache;this.text=options.text||null;this.name=options.name||null;this.ext=options.ext||EJS.ext;this.extMatch=new RegExp(this.ext.replace(/\./,"."))}};EJS.endExt=function(path,match){if(!path){return null}match.lastIndex=0;return path+(match.test(path)?"":this.ext)};EJS.Scanner=function(source,left,right){extend(this,{left_delimiter:left+"%",right_delimiter:"%"+right,double_left:left+"%%",double_right:"%%"+right,left_equal:left+"%=",left_comment:left+"%#"});this.SplitRegexp=left=="["?/(\[%%)|(%%\])|(\[%=)|(\[%#)|(\[%)|(%\]\n)|(%\])|(\n)/:new RegExp("("+this.double_left+")|(%%"+this.double_right+")|("+this.left_equal+")|("+this.left_comment+")|("+this.left_delimiter+")|("+this.right_delimiter+"\n)|("+this.right_delimiter+")|(\n)");this.source=source;this.stag=null;this.lines=0};EJS.Scanner.to_text=function(input){if(input==null||input===undefined){return""}if(input instanceof Date){return input.toDateString()}if(input.toString){return input.toString()}return""};EJS.Scanner.prototype={scan:function(block){scanline=this.scanline;regex=this.SplitRegexp;if(!this.source==""){var source_split=rsplit(this.source,/\n/);for(var i=0;i<source_split.length;i++){var item=source_split[i];this.scanline(item,regex,block)}}},scanline:function(line,regex,block){this.lines++;var line_split=rsplit(line,regex);for(var i=0;i<line_split.length;i++){var token=line_split[i];if(token!=null){try{block(token,this)}catch(e){throw {type:"EJS.Scanner",line:this.lines}}}}}};EJS.Buffer=function(pre_cmd,post_cmd){this.line=new Array();this.script="";this.pre_cmd=pre_cmd;this.post_cmd=post_cmd;for(var i=0;i<this.pre_cmd.length;i++){this.push(pre_cmd[i])}};EJS.Buffer.prototype={push:function(cmd){this.line.push(cmd)},cr:function(){this.script=this.script+this.line.join("; ");this.line=new Array();this.script=this.script+"\n"},close:function(){if(this.line.length>0){for(var i=0;i<this.post_cmd.length;i++){this.push(pre_cmd[i])}this.script=this.script+this.line.join("; ");line=null}}};EJS.Compiler=function(source,left){this.pre_cmd=["var ___ViewO = [];"];this.post_cmd=new Array();this.source=" ";if(source!=null){if(typeof source=="string"){source=source.replace(/\r\n/g,"\n");source=source.replace(/\r/g,"\n");this.source=source}else{if(source.innerHTML){this.source=source.innerHTML}}if(typeof this.source!="string"){this.source=""}}left=left||"<";var right=">";switch(left){case"[":right="]";break;case"<":break;default:throw left+" is not a supported deliminator";break}this.scanner=new EJS.Scanner(this.source,left,right);this.out=""};EJS.Compiler.prototype={compile:function(options,name){options=options||{};this.out="";var put_cmd="___ViewO.push(";var insert_cmd=put_cmd;var buff=new EJS.Buffer(this.pre_cmd,this.post_cmd);var content="";var clean=function(content){content=content.replace(/\\/g,"\\\\");content=content.replace(/\n/g,"\\n");content=content.replace(/"/g,'\\"');return content};this.scanner.scan(function(token,scanner){if(scanner.stag==null){switch(token){case"\n":content=content+"\n";buff.push(put_cmd+'"'+clean(content)+'");');buff.cr();content="";break;case scanner.left_delimiter:case scanner.left_equal:case scanner.left_comment:scanner.stag=token;if(content.length>0){buff.push(put_cmd+'"'+clean(content)+'")')}content="";break;case scanner.double_left:content=content+scanner.left_delimiter;break;default:content=content+token;break}}else{switch(token){case scanner.right_delimiter:switch(scanner.stag){case scanner.left_delimiter:if(content[content.length-1]=="\n"){content=chop(content);buff.push(content);buff.cr()}else{buff.push(content)}break;case scanner.left_equal:buff.push(insert_cmd+"(EJS.Scanner.to_text("+content+")))");break}scanner.stag=null;content="";break;case scanner.double_right:content=content+scanner.right_delimiter;break;default:content=content+token;break}}});if(content.length>0){buff.push(put_cmd+'"'+clean(content)+'")')}buff.close();this.out=buff.script+";";var to_be_evaled="/*"+name+"*/this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {"+this.out+" return ___ViewO.join('');}}}catch(e){e.lineNumber=null;throw e;}};";try{eval(to_be_evaled)}catch(e){if(typeof JSLINT!="undefined"){JSLINT(this.out);for(var i=0;i<JSLINT.errors.length;i++){var error=JSLINT.errors[i];if(error.reason!="Unnecessary semicolon."){error.line++;var e=new Error();e.lineNumber=error.line;e.message=error.reason;if(options.view){e.fileName=options.view}throw e}}}else{throw e}}}};EJS.config=function(options){EJS.cache=options.cache!=null?options.cache:EJS.cache;EJS.type=options.type!=null?options.type:EJS.type;EJS.ext=options.ext!=null?options.ext:EJS.ext;var templates_directory=EJS.templates_directory||{};EJS.templates_directory=templates_directory;EJS.get=function(path,cache){if(cache==false){return null}if(templates_directory[path]){return templates_directory[path]}return null};EJS.update=function(path,template){if(path==null){return }templates_directory[path]=template};EJS.INVALID_PATH=-1};EJS.config({cache:true,type:"<",ext:".ejs"});EJS.Helpers=function(data,extras){this._data=data;this._extras=extras;extend(this,extras)};EJS.Helpers.prototype={view:function(options,data,helpers){if(!helpers){helpers=this._extras}if(!data){data=this._data}return new EJS(options).render(data,helpers)},to_text:function(input,null_text){if(input==null||input===undefined){return null_text||""}if(input instanceof Date){return input.toDateString()}if(input.toString){return input.toString().replace(/\n/g,"<br />").replace(/''/g,"'")}return""}};EJS.newRequest=function(){var factories=[function(){return new ActiveXObject("Msxml2.XMLHTTP")},function(){return new XMLHttpRequest()},function(){return new ActiveXObject("Microsoft.XMLHTTP")}];for(var i=0;i<factories.length;i++){try{var request=factories[i]();if(request!=null){return request}}catch(e){continue}}};EJS.request=function(path){var request=new EJS.newRequest();request.open("GET",path,false);try{request.send(null)}catch(e){return null}if(request.status==404||request.status==2||(request.status==0&&request.responseText=="")){return null}return request.responseText};EJS.ajax_request=function(params){params.method=(params.method?params.method:"GET");var request=new EJS.newRequest();request.onreadystatechange=function(){if(request.readyState==4){if(request.status==200){params.onComplete(request)}else{params.onComplete(request)}}};request.open(params.method,params.url);request.send(null)}})();EJS.Helpers.prototype.date_tag=function(C,O,A){if(!(O instanceof Date)){O=new Date()}var B=["January","February","March","April","May","June","July","August","September","October","November","December"];var G=[],D=[],P=[];var J=O.getFullYear();var H=O.getMonth();var N=O.getDate();for(var M=J-15;M<J+15;M++){G.push({value:M,text:M})}for(var E=0;E<12;E++){D.push({value:(E),text:B[E]})}for(var I=0;I<31;I++){P.push({value:(I+1),text:(I+1)})}var L=this.select_tag(C+"[year]",J,G,{id:C+"[year]"});var F=this.select_tag(C+"[month]",H,D,{id:C+"[month]"});var K=this.select_tag(C+"[day]",N,P,{id:C+"[day]"});return L+F+K};EJS.Helpers.prototype.form_tag=function(B,A){A=A||{};A.action=B;if(A.multipart==true){A.method="post";A.enctype="multipart/form-data"}return this.start_tag_for("form",A)};EJS.Helpers.prototype.form_tag_end=function(){return this.tag_end("form")};EJS.Helpers.prototype.hidden_field_tag=function(A,C,B){return this.input_field_tag(A,C,"hidden",B)};EJS.Helpers.prototype.input_field_tag=function(A,D,C,B){B=B||{};B.id=B.id||A;B.value=D||"";B.type=C||"text";B.name=A;return this.single_tag_for("input",B)};EJS.Helpers.prototype.is_current_page=function(A){return(window.location.href==A||window.location.pathname==A?true:false)};EJS.Helpers.prototype.link_to=function(B,A,C){if(!B){var B="null"}if(!C){var C={}}if(C.confirm){C.onclick=' var ret_confirm = confirm("'+C.confirm+'"); if(!ret_confirm){ return false;} ';C.confirm=null}C.href=A;return this.start_tag_for("a",C)+B+this.tag_end("a")};EJS.Helpers.prototype.submit_link_to=function(B,A,C){if(!B){var B="null"}if(!C){var C={}}C.onclick=C.onclick||"";if(C.confirm){C.onclick=' var ret_confirm = confirm("'+C.confirm+'"); if(!ret_confirm){ return false;} ';C.confirm=null}C.value=B;C.type="submit";C.onclick=C.onclick+(A?this.url_for(A):"")+"return false;";return this.start_tag_for("input",C)};EJS.Helpers.prototype.link_to_if=function(F,B,A,D,C,E){return this.link_to_unless((F==false),B,A,D,C,E)};EJS.Helpers.prototype.link_to_unless=function(E,B,A,C,D){C=C||{};if(E){if(D&&typeof D=="function"){return D(B,A,C,D)}else{return B}}else{return this.link_to(B,A,C)}};EJS.Helpers.prototype.link_to_unless_current=function(B,A,C,D){C=C||{};return this.link_to_unless(this.is_current_page(A),B,A,C,D)};EJS.Helpers.prototype.password_field_tag=function(A,C,B){return this.input_field_tag(A,C,"password",B)};EJS.Helpers.prototype.select_tag=function(D,G,H,F){F=F||{};F.id=F.id||D;F.value=G;F.name=D;var B="";B+=this.start_tag_for("select",F);for(var E=0;E<H.length;E++){var C=H[E];var A={value:C.value};if(C.value==G){A.selected="selected"}B+=this.start_tag_for("option",A)+C.text+this.tag_end("option")}B+=this.tag_end("select");return B};EJS.Helpers.prototype.single_tag_for=function(A,B){return this.tag(A,B,"/>")};EJS.Helpers.prototype.start_tag_for=function(A,B){return this.tag(A,B)};EJS.Helpers.prototype.submit_tag=function(A,B){B=B||{};B.type=B.type||"submit";B.value=A||"Submit";return this.single_tag_for("input",B)};EJS.Helpers.prototype.tag=function(C,E,D){if(!D){var D=">"}var B=" ";for(var A in E){if(E[A]!=null){var F=E[A].toString()}else{var F=""}if(A=="Class"){A="class"}if(F.indexOf("'")!=-1){B+=A+'="'+F+'" '}else{B+=A+"='"+F+"' "}}return"<"+C+B+D};EJS.Helpers.prototype.tag_end=function(A){return"</"+A+">"};EJS.Helpers.prototype.text_area_tag=function(A,C,B){B=B||{};B.id=B.id||A;B.name=B.name||A;C=C||"";if(B.size){B.cols=B.size.split("x")[0];B.rows=B.size.split("x")[1];delete B.size}B.cols=B.cols||50;B.rows=B.rows||4;return this.start_tag_for("textarea",B)+C+this.tag_end("textarea")};EJS.Helpers.prototype.text_tag=EJS.Helpers.prototype.text_area_tag;EJS.Helpers.prototype.text_field_tag=function(A,C,B){return this.input_field_tag(A,C,"text",B)};EJS.Helpers.prototype.url_for=function(A){return'window.location="'+A+'";'};EJS.Helpers.prototype.img_tag=function(B,C,A){A=A||{};A.src=B;A.alt=C;return this.single_tag_for("img",A)}
-// var geocoder = new google.maps.Geocoder;
-var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
-// var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
+    var $ = jQuery.noConflict();
 
-var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
-var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
+    // var geocoder = new google.maps.Geocoder;
+    var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
+    var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    // var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
 
-// parsing out division IDs
-var federal_pattern = "ocd-division/country:us";
-var state_pattern = /ocd-division\/country:us\/state:(\D{2}$)/;
-var cd_pattern = /ocd-division\/country:us\/state:(\D{2})\/cd:/;
-var sl_pattern = /ocd-division\/country:us\/state:(\D{2})\/(sldl:|sldu:)/;
-var county_pattern = /ocd-division\/country:us\/state:\D{2}\/county:\D+/;
-var local_pattern = /ocd-division\/country:us\/state:\D{2}\/place:\D+/;
-var district_pattern = /ocd-division\/country:us\/district:\D+/;
+    var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
+    var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
 
-var federal_offices = ['United States Senate', 'United States House of Representatives']
+    // parsing out division IDs
+    var federal_pattern = "ocd-division/country:us";
+    var state_pattern = /ocd-division\/country:us\/state:(\D{2}$)/;
+    var cd_pattern = /ocd-division\/country:us\/state:(\D{2})\/cd:/;
+    var sl_pattern = /ocd-division\/country:us\/state:(\D{2})\/(sldl:|sldu:)/;
+    var county_pattern = /ocd-division\/country:us\/state:\D{2}\/county:\D+/;
+    var local_pattern = /ocd-division\/country:us\/state:\D{2}\/place:\D+/;
+    var district_pattern = /ocd-division\/country:us\/district:\D+/;
 
-var social_icon_lookup = {
-    'YouTube': 'youtube',
-    'Facebook': 'facebook',
-    'Twitter': 'twitter',
-    'GooglePlus': 'google-plus'
-};
+    var federal_offices = ['United States Senate', 'United States House of Representatives']
 
-var social_link_lookup = {
-    'YouTube': 'https://www.youtube.com/user/',
-    'Facebook': 'https://www.facebook.com/',
-    'Twitter': 'https://twitter.com/',
-    'GooglePlus': 'https://plus.google.com/'
-};
+    var social_icon_lookup = {
+        'YouTube': 'youtube',
+        'Facebook': 'facebook',
+        'Twitter': 'twitter',
+        'GooglePlus': 'google-plus'
+    };
 
-var selected_state = '';
-var selected_county = '';
-var selected_local = '';
-var all_people = {};
-var pseudo_id = 1;
+    var social_link_lookup = {
+        'YouTube': 'https://www.youtube.com/user/',
+        'Facebook': 'https://www.facebook.com/',
+        'Twitter': 'https://twitter.com/',
+        'GooglePlus': 'https://plus.google.com/'
+    };
+
+    var selected_state = '';
+    var selected_county = '';
+    var selected_local = '';
+    var all_people = {};
+    var pseudo_id = 1;
 
 
-// var maps = function(e){
-//     var params = {
-//         'key':MAPS_KEY
-//     }
-//     $.when($.getJSON(MAPS_API, params)).then(function(data){
-        
-//         console.log('data:', data);
-//     });
+    var address, divisions, officials, offices;
 
-// }
-
-var address, divisions, officials, offices;
-function addressSearch(){
+    function addressSearch() {
 
         address = $('#address').val();
         // $.address.parameter('address', encodeURIComponent(address));
@@ -1120,7 +1112,7 @@ function addressSearch(){
             'key': API_KEY
         }
 
-        $.when($.getJSON(INFO_API, params)).then(function(data){
+        $.when($.getJSON(INFO_API, params)).then(function(data) {
             divisions = data['divisions'];
             officials = data['officials'];
             offices = data['offices'];
@@ -1128,46 +1120,46 @@ function addressSearch(){
             draw_searchResults();
         })
 
-}
-
-
-        
-function draw_searchResults() {
-
-    // configuration for showing representatives at different levels of government
-
-    var show_local   = false;
-    var show_county  = false;
-    var show_state   = false;
-    var show_federal = false;
-
-    var results_level_set = [];
-    // set levels from checkboxes
-    if ($('#show_local_results').is(':checked')) {
-        show_local = true;
-        results_level_set.push('local');
-    }
-    if ($('#show_county_results').is(':checked')) {
-        show_county = true;
-        results_level_set.push('county');
-    }
-    if ($('#show_state_results').is(':checked')) {
-        show_state = true;
-        results_level_set.push('state');
-    }
-    if ($('#show_federal_results').is(':checked')) {
-        show_federal = true;
-        results_level_set.push('federal');
     }
 
-//    $.address.parameter('results_level', results_level_set);
 
-    // console.log('doin search')
-    // console.log('local: ' + show_local)
-    // console.log('county: ' + show_county)
-    // console.log('state: ' + show_state)
-    // console.log('federal: ' + show_federal)
-    
+
+    function draw_searchResults() {
+
+        // configuration for showing representatives at different levels of government
+
+        var show_local = false;
+        var show_county = false;
+        var show_state = false;
+        var show_federal = false;
+
+        var results_level_set = [];
+        // set levels from checkboxes
+        if ($('#show_local_results').is(':checked')) {
+            show_local = true;
+            results_level_set.push('local');
+        }
+        if ($('#show_county_results').is(':checked')) {
+            show_county = true;
+            results_level_set.push('county');
+        }
+        if ($('#show_state_results').is(':checked')) {
+            show_state = true;
+            results_level_set.push('state');
+        }
+        if ($('#show_federal_results').is(':checked')) {
+            show_federal = true;
+            results_level_set.push('federal');
+        }
+
+        //    $.address.parameter('results_level', results_level_set);
+
+        // console.log('doin search')
+        // console.log('local: ' + show_local)
+        // console.log('county: ' + show_county)
+        // console.log('state: ' + show_state)
+        // console.log('federal: ' + show_federal)
+
 
 
         $('table tbody').empty();
@@ -1190,20 +1182,19 @@ function draw_searchResults() {
         if (divisions === undefined) {
             $("#no-response-container").show();
             $("#response-container").hide();
-        }
-        else {
+        } else {
             setFoundDivisions(divisions);
-             
+
             displayTags(setUserTags(divisions));
 
-            $.each(divisions, function(division_id, division){
-                
-                if (typeof division.officeIndices !== 'undefined'){
-                    
-                    $.each(division.officeIndices, function(i, office){
+            $.each(divisions, function(division_id, division) {
+
+                if (typeof division.officeIndices !== 'undefined') {
+
+                    $.each(division.officeIndices, function(i, office) {
                         var office_name = offices[office];
 
-                        $.each(offices[office]['officialIndices'], function(i, official){
+                        $.each(offices[office]['officialIndices'], function(i, official) {
                             var info = {
                                 'person': null,
                                 'office': office_name,
@@ -1220,9 +1211,9 @@ function draw_searchResults() {
                             var person = officials[official];
                             info['person'] = person;
 
-                            if (typeof person.channels !== 'undefined'){
+                            if (typeof person.channels !== 'undefined') {
                                 var channels = [];
-                                $.each(person.channels, function(i, channel){
+                                $.each(person.channels, function(i, channel) {
                                     if (channel.type != 'GooglePlus' && channel.type != 'YouTube') {
                                         channel['icon'] = social_icon_lookup[channel.type];
                                         channel['link'] = social_link_lookup[channel.type] + channel['id'];
@@ -1231,26 +1222,26 @@ function draw_searchResults() {
                                 });
                                 info['channels'] = channels;
                             }
-                            if (typeof person.address !== 'undefined'){
+                            if (typeof person.address !== 'undefined') {
                                 info['address'] = person.address;
                             }
-                            if (typeof person.phones !== 'undefined'){
+                            if (typeof person.phones !== 'undefined') {
                                 info['phones'] = person.phones;
                             }
-                            if (typeof person.urls !== 'undefined'){
+                            if (typeof person.urls !== 'undefined') {
                                 info['urls'] = person.urls;
                             }
-                            if (typeof person.emails !== 'undefined'){
+                            if (typeof person.emails !== 'undefined') {
                                 info['emails'] = person.emails;
                             }
 
-                            if(checkFederal(division_id, office_name)) {
+                            if (checkFederal(division_id, office_name)) {
                                 info['jurisdiction'] = 'Federal Government';
                                 federal_people.push(info);
                             } else if (checkState(division_id)) {
                                 info['jurisdiction'] = selected_state;
                                 state_people.push(info);
-                            } else if (checkCounty(division_id)){
+                            } else if (checkCounty(division_id)) {
                                 info['jurisdiction'] = selected_county;
                                 county_people.push(info);
                             } else {
@@ -1266,14 +1257,14 @@ function draw_searchResults() {
                 }
             });
 
-            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key="+MAPS_KEY+"&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
+            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + MAPS_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
 
-            var template = new EJS({'text': $('#tableGuts').html()});
-            
+            var template = new EJS({ 'text': $('#tableGuts').html() });
+
             if (show_federal) {
                 $('#federal-container').show();
                 $('#fed-nav').show();
-                $('#federal-results tbody').append(template.render({people: federal_people}));
+                $('#federal-results tbody').append(template.render({ people: federal_people }));
             } else {
                 $('#federal-container').hide()
                 $('#fed-nav').hide();
@@ -1284,11 +1275,11 @@ function draw_searchResults() {
                 $('#state-nav').show();
                 if (state_people.length == 0)
                     $('#state-container').hide();
-                $('#state-results tbody').append(template.render({people: state_people}));
+                $('#state-results tbody').append(template.render({ people: state_people }));
             } else {
                 $('#state-container').hide()
                 $('#state-nav').hide();
-            }                
+            }
 
             if (show_county) {
                 if (county_people.length == 0) {
@@ -1297,31 +1288,29 @@ function draw_searchResults() {
                         $('#county-container-not-found').hide();
                     else
                         $('#county-container-not-found').show();
-                }
-                else {
+                } else {
                     $('#county-container').show();
                     $('#county-container-not-found').hide();
                 }
 
-                $('#county-results tbody').append(template.render({people: county_people}));
+                $('#county-results tbody').append(template.render({ people: county_people }));
             } else {
                 $('#county-container').hide()
                 $('#county-nav').hide();
-            }  
+            }
 
-            if (show_local) {    
+            if (show_local) {
                 if (local_people.length == 0) {
                     $('#local-container').hide();
                     if (selected_local == '')
                         $('#local-container-not-found').hide();
                     else
                         $('#local-container-not-found').show();
-                }
-                else {
+                } else {
                     $('#local-container').show();
                     $('#local-container-not-found').hide();
                 }
-                $('#local-results tbody').append(template.render({people: local_people}));   
+                $('#local-results tbody').append(template.render({ people: local_people }));
             } else {
                 $('#local-container').hide()
                 $('#local-nav').hide();
@@ -1331,217 +1320,165 @@ function draw_searchResults() {
             $("#no-response-container").hide();
 
             // hook up modal stuff
-            var modal_template = new EJS({'text': $('#modalGuts').html()});
+            var modal_template = new EJS({ 'text': $('#modalGuts').html() });
             $('.btn-contact').off('click');
-            $('.btn-contact').on('click', function(){
+            $('.btn-contact').on('click', function() {
                 var info = all_people[$(this).data('id')];
                 $('#contactModalLabel').html("Contact " + info.person.name);
-                $('#modalContent').html(modal_template.render({info: info}));
+                $('#modalContent').html(modal_template.render({ info: info }));
                 $('#contactModal').modal('show');
             })
         }
-}
+    }
 
-function findMe() {
-    var foundLocation;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            var accuracy = position.coords.accuracy;
-            var coords = new google.maps.LatLng(latitude, longitude);
+    function findMe() {
+        var foundLocation;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
+                var coords = new google.maps.LatLng(latitude, longitude);
 
-            // console.log(coords);
+                // console.log(coords);
 
-            geocoder.geocode({
-                'location': coords
-            }, function (results, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    if (results[1]) {
-                        $("#address").val(results[1].formatted_address);
-                        addressSearch();
+                geocoder.geocode({
+                    'location': coords
+                }, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[1]) {
+                            $("#address").val(results[1].formatted_address);
+                            addressSearch();
+                        }
                     }
-                }
-            });
+                });
 
-        }, function error(msg) {
-            alert('Please enable your GPS position feature.');
-        }, {
-            //maximumAge: 600000,
-            //timeout: 5000,
-            enableHighAccuracy: true
+            }, function error(msg) {
+                alert('Please enable your GPS position feature.');
+            }, {
+                //maximumAge: 600000,
+                //timeout: 5000,
+                enableHighAccuracy: true
+            });
+        } else {
+            alert("Geolocation API is not supported in your browser.");
+        }
+    };
+
+    function setFoundDivisions(divisions) {
+
+        // reset the labels
+        $("#state-nav").hide();
+        $("#county-nav").hide();
+        $("#local-nav").hide();
+
+        // console.log(divisions)
+        $.each(divisions, function(division_id, division) {
+            if (state_pattern.test(division_id)) {
+                selected_state = division.name;
+                $("[id^=state-name]").html(selected_state);
+                $("#state-nav").show();
+            }
+            if (county_pattern.test(division_id)) {
+                selected_county = division.name;
+                $("[id^=county-name]").html(selected_county);
+                $("#county-nav").show();
+            }
+            if (local_pattern.test(division_id) || district_pattern.test(division_id)) {
+                selected_local = division.name;
+                $("[id^=local-name]").html(selected_local);
+                $("#local-nav").show();
+            }
+            // if (sl_pattern.test(division_id)) {
+            //     selected_local = division.name;
+            //     $("[id^=local-name]").html(selected_local);
+            //     $("#local-nav").show();
+            // }
         });
-    } else {
-        alert("Geolocation API is not supported in your browser.");
     }
-};
 
-function setFoundDivisions(divisions){
-    
-    // reset the labels
-    $("#state-nav").hide();
-    $("#county-nav").hide();
-    $("#local-nav").hide();
+    var district_tags = {};
 
-    // console.log(divisions)
-    $.each(divisions, function(division_id, division){
-        if (state_pattern.test(division_id)) {
-            selected_state = division.name;
-            $("[id^=state-name]").html(selected_state);
-            $("#state-nav").show();
+    function setUserTags(divisions) {
+        for (var division in divisions) {
+
+            var district_tag = division.split("/");
+            district_tag = district_tag[district_tag.length - 1];
+            district_tag = district_tag.split(":");
+
+            if (district_tag[0] == 'sldu') {
+                district_tag[0] = 'slsd'; // state level Senate district
+            } else if (district_tag[0] == 'sldl') {
+                district_tag[0] = 'slcd'; //state level Congressional district   
+            }
+            district_tags[district_tag[0]] = district_tag[1];
+
+
         }
-        if (county_pattern.test(division_id)) {
-            selected_county = division.name;
-            $("[id^=county-name]").html(selected_county);
-            $("#county-nav").show();
-        }
-        if (local_pattern.test(division_id) || district_pattern.test(division_id)) {
-            selected_local = division.name;
-            $("[id^=local-name]").html(selected_local);
-            $("#local-nav").show();
-        }
-        // if (sl_pattern.test(division_id)) {
-        //     selected_local = division.name;
-        //     $("[id^=local-name]").html(selected_local);
-        //     $("#local-nav").show();
-        // }
-    });
-}
 
-var district_tags = {};
-function setUserTags(divisions){
-    for (var division in divisions){
-            
-        var district_tag=division.split("/");
-        district_tag = district_tag[district_tag.length-1];
-        district_tag = district_tag.split(":");
-
-        if(district_tag[0] == 'sldu'){
-            district_tag[0] ='slsd'; // state level Senate district
-        }else if(district_tag[0]=='sldl'){
-            district_tag[0] = 'slcd'; //state level Congressional district   
-        }
-        district_tags[district_tag[0]]=district_tag[1];
-        
-
+        return district_tags;
     }
-    
-    return district_tags;
-}
 
-function displayTags(tags){
-    var result = "";
-    for (var p in tags) {
-        if( tags.hasOwnProperty(p) ) {
-          result +="<div id='"+p+"' class='badge badge-pill badge-primary p-3'>" + p + " : " + tags[p] + "</div>";
-        } 
+    function displayTags(tags) {
+        var result = "";
+        for (var p in tags) {
+            if (tags.hasOwnProperty(p)) {
+                result += "<div id='" + p + "' class='badge badge-pill badge-primary p-3'>" + p + " : " + tags[p] + "</div>";
+            }
+        }
+        document.getElementById('tag-container').innerHTML = '';
+        document.getElementById('tag-container').insertAdjacentHTML('beforeend', result);
+        return false;
     }
-    document.getElementById('tag-container').innerHTML='';
-    document.getElementById('tag-container').insertAdjacentHTML('beforeend',result);  
-    return false;
-}
 
-function checkFederal(division_id, office_name) {
-    if( division_id == federal_pattern || 
-        cd_pattern.test(division_id) ||
-        federal_offices.indexOf(office_name.name) >= 0)
-        return true;
-    else
-        return false; 
-}
+    function checkFederal(division_id, office_name) {
+        if (division_id == federal_pattern ||
+            cd_pattern.test(division_id) ||
+            federal_offices.indexOf(office_name.name) >= 0)
+            return true;
+        else
+            return false;
+    }
 
-function checkState(division_id){
-    if( state_pattern.test(division_id) ||
-        sl_pattern.test(division_id))
-        return true;
-    else
-        return false; 
-}
+    function checkState(division_id) {
+        if (state_pattern.test(division_id) ||
+            sl_pattern.test(division_id))
+            return true;
+        else
+            return false;
+    }
 
-function checkCounty(division_id){
-    if( county_pattern.test(division_id))
-        return true;
-    else
-        return false; 
-}
+    function checkCounty(division_id) {
+        if (county_pattern.test(division_id))
+            return true;
+        else
+            return false;
+    }
 
-function formatParty(party) {
-    if (party) {
-        if (party == 'Unknown')
+    function formatParty(party) {
+        if (party) {
+            if (party == 'Unknown')
+                return '';
+
+            var party_letter = party.charAt(0);
+            var css_class = 'label-ind';
+            if (party_letter == 'D')
+                css_class = 'label-dem';
+            else if (party_letter == 'R')
+                css_class = 'label-rep';
+
+            return "(<span title='" + party + "' class='" + css_class + "'>" + party_letter + "</span>)";
+        } else
             return '';
-
-        var party_letter = party.charAt(0);
-        var css_class ='label-ind';
-        if (party_letter == 'D')
-            css_class ='label-dem';
-        else if (party_letter == 'R')
-            css_class ='label-rep';
-
-        return "(<span title='" + party + "' class='" + css_class + "'>" + party_letter + "</span>)";
     }
-    else
-        return '';
-}
 
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    }
 
-//converts a slug or query string in to readable text
-function convertToPlainString(text) {
-    if (text === undefined) return '';
-    return decodeURIComponent(text);
-}
-
-//<![CDATA[
-$(function() {
-
-                var autocomplete = new google.maps.places.Autocomplete(document.getElementById('address'), { types: ['address'] });
-
-                $("#address").val(convertToPlainString($.address.parameter('address')));
-
-                if ($("#address").val())
-                    addressSearch();
-
-                $('#address-search').click(function() {
-                    addressSearch();
-                });
-
-                var results_level = $.address.parameter('results_level');
-                if (results_level == undefined)
-                    results_level = ['local', 'county', 'state', 'federal'];
-
-                // set levels of government checkboxes
-                if (results_level.indexOf("local") >= 0)
-                    $('#show_local_results').prop('checked', true);
-                if (results_level.indexOf("county") >= 0)
-                    $('#show_county_results').prop('checked', true);
-                if (results_level.indexOf("state") >= 0)
-                    $('#show_state_results').prop('checked', true);
-                if (results_level.indexOf("federal") >= 0)
-                    $('#show_federal_results').prop('checked', true);
-
-                $("#results-nav a").click(function(e) {
-                    e.preventDefault();
-                    var scroll_to = $($("#" + e.target.id).attr('href'));
-                    $('html, body').animate({
-                        scrollTop: scroll_to.offset().top
-                    }, 1000);
-                });
-
-                $('#find-me').click(function() {
-                    findMe();
-                    return false;
-                });
-
-                $(":text").keydown(function(e) {
-                    var key = e.keyCode ? e.keyCode : e.which;
-                    if (key === 13) {
-                        $('#address-search').click();
-                        return false;
-                    }
-                });
-            });
-            //]]>
+    //converts a slug or query string in to readable text
+    function convertToPlainString(text) {
+        if (text === undefined) return '';
+        return decodeURIComponent(text);
+    }
 
