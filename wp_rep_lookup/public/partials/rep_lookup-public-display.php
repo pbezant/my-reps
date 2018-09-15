@@ -19,22 +19,23 @@
         <div class="container-fluid">
                 <!-- Update this tagline! -->
                 <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
-            </div>
             <br />
             <!-- Add your call to action here! -->
             <div class="row">
-                <div class='col-md-10 col-md-offset-1'>
-                    <div class="input-group input-group-lg col-sm-8 col-sm-offset-2">
+                <div class='col m-auto'>
+                    <div class="input-group input-group-lg">
                         <input type="text" class="form-control" placeholder="Enter your address to find who represents you" id="address" name="address">
-                        <span class="input-group-btn">
-                <button class="btn btn-info" type="submit" id="address-search"><i class='fa fa-search'></i> <span class='hidden-xs hidden-sm'>Search</span></button>
-                       <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button>
-                        </span> -->
+                        <span class="input-group-append">
+                        <button class="btn btn-info" type="submit" id="address-search"><i class='fa fa-search'></i> <span class='hidden-xs hidden-sm'>Search</span></button>
+                       <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
+                        </span> 
                     </div>
-                    <div class='col-sm-8 col-sm-offset-2 filter_level'>
+                   <div class='filter_level text-center'>
                         <br />
-                        <p class='text-center'>
+                        <p class=''>
                             Show level of government:
+                        </p>
+                        <div class="d-flex justify-content-center">
                             <label>
                                 <input type="checkbox" id="show_local_results" value="Local"> Local
                             </label>
@@ -47,13 +48,13 @@
                             <label>
                                 <input type="checkbox" id="show_federal_results" value="Federal"> Federal
                             </label>
-                        </p>
+                        </div>
                     </div>
                     <br />
                 </div>
             </div>
             <div class="row">
-                <div class='col-md-10 col-md-offset-1'>
+                <div class='col m-auto'>
                     <div id='no-response-container' class='text-center' style="display:none;">
                         <h1><i class='fa fa-exclamation-triangle'></i> </h1>
                         <h3>No representatives found</h3>
@@ -82,12 +83,12 @@
                         </p>
                         <hr />
                         <p class='text-center'><small><em>Note: Data comes from the <a target='_blank' href='https://developers.google.com/civic-information/'>Google Civic Information API</a>, which does not have 100% coverage of all representatives.<br />If you notice an issue with the data, please <a target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLScFpFTOkTpm0YoerLLprY_ySS9PRXLsu27SM01hebHqkefW2Q/viewform'>report it to Google</a>.</em></small></p>
-                        <div id="tag-container" class="d-flex justify-content-around">
+                        <div id="tag-container" class="d-flex flex-wrap justify-content-around">
                         </div>
                         <div id='local-container'>
                             <br />
                             <h3 class='text-center' id="local-name"></h3>
-                            <table id="local-results" class="table">
+                            <table id="local-results" class="table table-responsive-sm">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -108,7 +109,7 @@
                         <div id='county-container'>
                             <br />
                             <h3 class='text-center' id="county-name"></h3>
-                            <table id="county-results" class="table">
+                            <table id="county-results" class="table table-responsive-sm">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -129,7 +130,7 @@
                         <div id='state-container'>
                             <br />
                             <h3 class='text-center' id="state-name"></h3>
-                            <table id="state-results" class="table">
+                            <table id="state-results" class="table table-responsive-sm">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -145,7 +146,7 @@
                         </div>
                         <div id='federal-container'>
                             <h3 id='federal-name' class='text-center'>United States Federal Government</h3>
-                            <table id="federal-results" class="table">
+                            <table id="federal-results" class="table table-responsive-sm">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -163,7 +164,7 @@
                 </div>
             </div>
             <div class='row'>
-                <div class='col-md-5 col-md-offset-2'>
+                <div class='col-md-7'>
                     <br />
                     <h2>About</h2>
                     <div class='about'>
@@ -173,8 +174,8 @@
                         <p><a href='/about.html'>More about this project &raquo;</a></p>
                     </div>
                 </div>
-                <div class='col-md-3 hidden-xs hidden-sm'>
-                    <img class='img-responsive' src='images/usa.png' title='The United States of America' alt='The United States of America' />
+                <div class='col-md-5 hidden-xs hidden-sm'>
+                    <img class='img-responsive img-fluid' src='<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/usa.png' title='The United States of America' alt='The United States of America' />
                 </div>
             </div>
             <!-- Modal -->
@@ -200,7 +201,7 @@
                             <% if (info.person.photoUrl) { %>
                                 <img class="img-rounded headshot" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                 <% } else { %>
-                                    <img class="img-rounded headshot" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                                    <img class="img-rounded headshot" src="<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                     <% } %>
                         </td>
                         <td>
@@ -234,18 +235,7 @@
                         </td>
                         <td>
                             <% if (info.channels || info.urls){ %>
-                                <span class='hidden-xs hidden-sm'>
-                        <% if (info.channels){ %>
-                        <% $.each(info.channels, function(i, channel){ %>
-                            <a href="<%= channel.link %>" target="_blank"><i class="fa fa-fw fa-<%= channel.icon %>"> </i></a>
-                        <% }) %>
-                        <% } %>
-                        <% if (info.urls){ %>
-                            <% $.each(info.urls, function(i, url){ %>
-                                <a href="<%= url %>" target="_blank"><i class="fa fa-fw fa-globe"> </i></a>
-                            <% }) %>
-                        <% } %>
-                    </span>
+                             
                                 <span class='visible-xs-inline visible-sm-inline'>
                         <% if (info.channels){ %>
                         <% $.each(info.channels, function(i, channel){ %>
@@ -329,7 +319,7 @@
     <div class='clearfix'></div>
     <div class="container-fluid">
         <div class="row" id="footer">
-            <div class='col-md-10 col-md-offset-1'>
+            <div class='col'>
                 <p class='text-center small'>
                     <br />
                     <br /> Built by <a href='http://datamade.us' target="_blank">DataMade</a> and the <a href='http://participatorybudgeting.org/'>Participatory Budgeting Project</a> | Powered by the <a target='_blank' href='https://developers.google.com/civic-information/'>Google Civic Information API</a>

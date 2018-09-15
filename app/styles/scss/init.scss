@@ -1,3 +1,7 @@
+@import 'general/_reset';
+
+@import 'bootstrap.min.scss';
+
 //misc settings
 @import 'config/_settings';
 @import 'config/_mixins';
@@ -5,10 +9,9 @@
 //frameworks
 
 //global things
-@import 'general/_reset';
 @import 'layout/_main';
 
 //pages
 
-@import 'bootstrap.min.scss';
+
 @import 'custom.scss';

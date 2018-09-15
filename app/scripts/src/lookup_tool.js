@@ -364,7 +364,7 @@
         var result = "";
         for (var p in tags) {
             if (tags.hasOwnProperty(p)) {
-                result += "<div id='" + p + "' class='badge badge-pill badge-primary p-3'>" + p + " : " + tags[p] + "</div>";
+                result += "<div id='" + p + "' class='badge badge-pill badge-primary p-3 mb-3'>" + p + " : " + tags[p] + "</div>";
             }
         }
         document.getElementById('tag-container').innerHTML = '';

@@ -53,10 +53,7 @@ gulp.task('images-deploy', function() {
         .pipe(plumber())
         .pipe(gulp.dest('dist/images'));
 
-    gulp.src(['dist/images/**/*', '!app/images/README'])
-        //prevent pipe breaking caused by errors from gulp plugins
-        .pipe(plumber())
-        .pipe(gulp.dest('wp_rep_lookup/images'));
+    
 });
 
 
@@ -121,6 +118,11 @@ gulp.task('build-wp-plugin', function(){
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(gulp.dest('wp_rep_lookup/public/css'));
+
+    gulp.src(['dist/images/**/*', '!dist/images/README'])
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(gulp.dest('wp_rep_lookup/images'));
 });
 
 //compiling our SCSS files
