@@ -24,7 +24,6 @@
     <meta name="twitter:url" content="http://findmyreps.datamade.us/">
     <meta name="twitter:description" content="Enter your address to find and contact your federal, state, county and local elected representatives">
     <meta name="twitter:image:src" content="http://findmyreps.datamade.us/images/usa.png">
-
     <!-- scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
@@ -32,29 +31,21 @@
 
     </script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"></script>
-    
-     <!--bootstrap -->  
-
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<!--     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
-
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!--bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!--     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- end bootstrap -->
-    
     <!-- styles -->
     <link rel="stylesheet" href="styles/rep_lookup.css">
-    <script src="scripts/rep_lookup.js"></script>    
-
-
-    
+    <script src="scripts/rep_lookup.js"></script>
 </head>
 
 <body>
     <div class='main-content'>
         <div class="container">
-
-                <!-- Update this tagline! -->
-                <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
+            <!-- Update this tagline! -->
+            <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
             <br />
             <!-- Add your call to action here! -->
             <div class="row">
@@ -63,8 +54,8 @@
                         <input type="text" class="form-control" placeholder="Enter your address to find who represents you" id="address" name="address">
                         <span class="input-group-append">
                         <button class="btn btn-info" type="submit" id="address-search"><i class='fa fa-search'></i> <span class='hidden-xs hidden-sm'>Search</span></button>
-                       <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
-                        </span> 
+                        <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
+                        </span>
                     </div>
                     <div class='filter_level text-center'>
                         <br />
@@ -219,13 +210,15 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="contactModalLabel"></h4>
+                            <h5 class="modal-title" id="contactModalLabel"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="modal-body" id='modalContent'>
-                        </div>
+                        <div class="modal-body" id='modalContent'></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class='fa fa-times'></i> Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                         </div>
                     </div>
                 </div>
@@ -271,7 +264,6 @@
                         </td>
                         <td>
                             <% if (info.channels || info.urls){ %>
-                                
                                 <span class='visible-xs-inline visible-sm-inline'>
                         <% if (info.channels){ %>
                         <% $.each(info.channels, function(i, channel){ %>
@@ -299,57 +291,51 @@
                     <% }) %>
             </script>
             <script id="modalGuts" type="text/EJS">
-                <div class='row'>
-                    <div class='col-xs-4'>
-                        <% if (info.person.photoUrl) { %>
-                            <img class="img-rounded img-responsive" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
-                            <% } else { %>
-                                <img class="img-rounded img-responsive" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
-                                <% } %>
+            <div class="media">
+                <% if (info.person.photoUrl) { %>
+                <img class="img-responsive align-self-center mr-3 w-25" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <% } else { %>
+                <img class="img-responsive align-self-center mr-3 w-25" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <% } %>
+                <div class="media-body">
+                    <!-- Add your contact instructions here! -->
+                    <p><strong><%= info.person.name %></strong><br/>
+                    <%= info.office.name %><br/>
+                    <%= info.jurisdiction %></p>
+                    <hr />
+                    
+                    <% if (info.phones){ %>
+                        <% $.each(info.phones, function(i, phone){ %>
+                            <% if ((i + 1) < info.phones.length){ %>
+                                <i class='fa fa-fw fa-phone'></i>
+                                <%= phone %>
                                     <br />
-                                    <strong><%= info.person.name %> <%= formatParty(info.person.party) %></strong>
-                                    <br />
-                                    <%= info.office.name %>
-                                        <br />
-                                        <%= info.jurisdiction %>
-                    </div>
-                    <div class='col-xs-8'>
-                        <!-- Add your contact instructions here! -->
-                        <p><strong>Contact <%= info.person.name %></strong></p>
-                        <hr />
-                        <% if (info.phones){ %>
-                            <% $.each(info.phones, function(i, phone){ %>
-                                <% if ((i + 1) < info.phones.length){ %>
-                                    <i class='fa fa-fw fa-phone'></i>
-                                    <%= phone %>
-                                        <br />
-                                        <% } else { %>
-                                            <i class='fa fa-fw fa-phone'></i>
-                                            <%= phone %>
-                                                <% } %>
-                                                    <% }) %>
-                                                        <br />
-                                                        <% } %>
-                                                            <% if (info.emails){ %>
-                                                                <% $.each(info.emails, function(i, email){ %>
-                                                                    <% if ((i + 1) < info.emails.length){ %>
-                                                                        <i class='fa fa-fw fa-envelope'></i>
-                                                                        <a href='mailto:<%= email %>'>
-                                                                            <%= email %>
-                                                                        </a>
-                                                                        <br />
-                                                                        <% } else { %>
-                                                                            <i class='fa fa-fw fa-envelope'></i>
-                                                                            <a href='mailto:<%= email %>'>
-                                                                                <%= email %>
-                                                                            </a>
-                                                                            <% } %>
-                                                                                <% }) %>
-                                                                                    <% } %>
-                    </div>
+                                    <% } else { %>
+                                        <i class='fa fa-fw fa-phone'></i>
+                                        <%= phone %>
+                                            <% } %>
+                                                <% }) %>
+                                                    <br />
+                                                    <% } %>
+                                                        <% if (info.emails){ %>
+                                                            <% $.each(info.emails, function(i, email){ %>
+                                                                <% if ((i + 1) < info.emails.length){ %>
+                                                                    <i class='fa fa-fw fa-envelope'></i>
+                                                                    <a href='mailto:<%= email %>'>
+                                                                        <%= email %>
+                                                                    </a>
+                                                                    <br />
+                                                                    <% } else { %>
+                                                                    <i class='fa fa-fw fa-envelope'></i>
+                                                                    <a href='mailto:<%= email %>'>
+                                                                        <%= email %>
+                                                                    </a>
+                            <% } %>
+                        <% }) %>
+                    <% } %>
                 </div>
+            </div>
             </script>
-
         </div>
     </div>
     <div class='clearfix'></div>
@@ -363,62 +349,60 @@
             </div>
         </div>
     </div>
-    
-                <script type='text/javascript'>
-            //<![CDATA[
+    <script type='text/javascript'>
+    //<![CDATA[
 
-            jQuery(document).ready(function($) {
+    jQuery(document).ready(function($) {
 
-                var autocomplete = new google.maps.places.Autocomplete(document.getElementById('address'), { types: ['address'] });
+        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('address'), { types: ['address'] });
 
-                $("#address").val(convertToPlainString($.address.parameter('address')));
+        $("#address").val(convertToPlainString($.address.parameter('address')));
 
-                if ($("#address").val())
-                    addressSearch();
+        if ($("#address").val())
+            addressSearch();
 
-                $('#address-search').click(function() {
-                    addressSearch();
-                });
+        $('#address-search').click(function() {
+            addressSearch();
+        });
 
-                var results_level = $.address.parameter('results_level');
-                if (results_level == undefined)
-                    results_level = ['local', 'county', 'state', 'federal'];
+        var results_level = $.address.parameter('results_level');
+        if (results_level == undefined)
+            results_level = ['local', 'county', 'state', 'federal'];
 
-                // set levels of government checkboxes
-                if (results_level.indexOf("local") >= 0)
-                    $('#show_local_results').prop('checked', true);
-                if (results_level.indexOf("county") >= 0)
-                    $('#show_county_results').prop('checked', true);
-                if (results_level.indexOf("state") >= 0)
-                    $('#show_state_results').prop('checked', true);
-                if (results_level.indexOf("federal") >= 0)
-                    $('#show_federal_results').prop('checked', true);
+        // set levels of government checkboxes
+        if (results_level.indexOf("local") >= 0)
+            $('#show_local_results').prop('checked', true);
+        if (results_level.indexOf("county") >= 0)
+            $('#show_county_results').prop('checked', true);
+        if (results_level.indexOf("state") >= 0)
+            $('#show_state_results').prop('checked', true);
+        if (results_level.indexOf("federal") >= 0)
+            $('#show_federal_results').prop('checked', true);
 
-                $("#results-nav a").click(function(e) {
-                    e.preventDefault();
-                    var scroll_to = $($("#" + e.target.id).attr('href'));
-                    $('html, body').animate({
-                        scrollTop: scroll_to.offset().top
-                    }, 1000);
-                });
+        $("#results-nav a").click(function(e) {
+            e.preventDefault();
+            var scroll_to = $($("#" + e.target.id).attr('href'));
+            $('html, body').animate({
+                scrollTop: scroll_to.offset().top
+            }, 1000);
+        });
 
-                $('#find-me').click(function() {
-                    findMe();
-                    return false;
-                });
+        $('#find-me').click(function() {
+            findMe();
+            return false;
+        });
 
-                $(":text").keydown(function(e) {
-                    var key = e.keyCode ? e.keyCode : e.which;
-                    if (key === 13) {
-                        $('#address-search').click();
-                        return false;
-                    }
-                });
-            });
-            //]]>
+        $(":text").keydown(function(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            if (key === 13) {
+                $('#address-search').click();
+                return false;
+            }
+        });
+    });
+    //]]>
 
-            </script>
-
+    </script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
     (function(b, o, i, l, e, r) {
