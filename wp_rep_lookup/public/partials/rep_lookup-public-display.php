@@ -178,18 +178,20 @@
                     <img class='img-responsive img-fluid' src='<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/usa.png' title='The United States of America' alt='The United States of America' />
                 </div>
             </div>
-            <!-- Modal -->
+             <!-- Modal -->
             <div class="modal" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="contactModalLabel"></h4>
+                            <h5 class="modal-title" id="contactModalLabel"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="modal-body" id='modalContent'>
-                        </div>
+                        <div class="modal-body" id='modalContent'></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class='fa fa-times'></i> Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                         </div>
                     </div>
                 </div>
@@ -263,55 +265,50 @@
                     <% }) %>
             </script>
             <script id="modalGuts" type="text/EJS">
-                <div class='row'>
-                    <div class='col-xs-4'>
-                        <% if (info.person.photoUrl) { %>
-                            <img class="img-rounded img-responsive" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
-                            <% } else { %>
-                                <img class="img-rounded img-responsive" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
-                                <% } %>
+            <div class="media">
+                <% if (info.person.photoUrl) { %>
+                <img class="img-responsive align-self-center mr-3 w-25" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <% } else { %>
+                <img class="img-rounded headshot align-self-center mr-3 w-25" src="<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <% } %>
+                <div class="media-body">
+                    <!-- Add your contact instructions here! -->
+                    <p><strong><%= info.person.name %></strong><br/>
+                    <%= info.office.name %><br/>
+                    <%= info.jurisdiction %></p>
+                    <hr />
+                    
+                    <% if (info.phones){ %>
+                        <% $.each(info.phones, function(i, phone){ %>
+                            <% if ((i + 1) < info.phones.length){ %>
+                                <i class='fa fa-fw fa-phone'></i>
+                                <a href="tel:<%= phone %>"><%= phone %></a>
                                     <br />
-                                    <strong><%= info.person.name %> <%= formatParty(info.person.party) %></strong>
-                                    <br />
-                                    <%= info.office.name %>
-                                        <br />
-                                        <%= info.jurisdiction %>
-                    </div>
-                    <div class='col-xs-8'>
-                        <!-- Add your contact instructions here! -->
-                        <p><strong>Contact <%= info.person.name %></strong></p>
-                        <hr />
-                        <% if (info.phones){ %>
-                            <% $.each(info.phones, function(i, phone){ %>
-                                <% if ((i + 1) < info.phones.length){ %>
-                                    <i class='fa fa-fw fa-phone'></i>
-                                    <%= phone %>
-                                        <br />
-                                        <% } else { %>
-                                            <i class='fa fa-fw fa-phone'></i>
-                                            <%= phone %>
-                                                <% } %>
-                                                    <% }) %>
-                                                        <br />
-                                                        <% } %>
-                                                            <% if (info.emails){ %>
-                                                                <% $.each(info.emails, function(i, email){ %>
-                                                                    <% if ((i + 1) < info.emails.length){ %>
-                                                                        <i class='fa fa-fw fa-envelope'></i>
-                                                                        <a href='mailto:<%= email %>'>
-                                                                            <%= email %>
-                                                                        </a>
-                                                                        <br />
-                                                                        <% } else { %>
-                                                                            <i class='fa fa-fw fa-envelope'></i>
-                                                                            <a href='mailto:<%= email %>'>
-                                                                                <%= email %>
-                                                                            </a>
-                                                                            <% } %>
-                                                                                <% }) %>
-                                                                                    <% } %>
-                    </div>
+                                    <% } else { %>
+                                        <i class='fa fa-fw fa-phone'></i>
+                                        <a href="tel:<%= phone %>"><%= phone %></a>
+                                            <% } %>
+                                                <% }) %>
+                                                    <br />
+                                                    <% } %>
+                                                        <% if (info.emails){ %>
+                                                            <% $.each(info.emails, function(i, email){ %>
+                                                                <% if ((i + 1) < info.emails.length){ %>
+                                                                    <i class='fa fa-fw fa-envelope'></i>
+                                                                    <a href='mailto:<%= email %>'>
+                                                                        <%= email %>
+                                                                    </a>
+                                                                    <br />
+                                                                    <% } else { %>
+                                                                    <i class='fa fa-fw fa-envelope'></i>
+                                                                    <a href='mailto:<%= email %>'>
+                                                                        <%= email %>
+                                                                    </a>
+                            <% } %>
+                        <% }) %>
+                    <% } %>
                 </div>
+            </div>
             </script>
 
         </div>
