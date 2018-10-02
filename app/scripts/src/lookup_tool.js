@@ -1,12 +1,13 @@
-    var $ = jQuery.noConflict();
+    const $ = jQuery.noConflict();
 
     // var geocoder = new google.maps.Geocoder;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-    var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
-    // var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38"; TXNORML KEY
+    //var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    // TXNORML KEY
+    var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 
 
-    var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
-    var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
+    // var MAPS_KEY = 'AIzaSyDgrSB9khZYXQfqoXfwmZ7PzvB8RWEjnuw';
+    // var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
 
     // parsing out division IDs
     var federal_pattern = "ocd-division/country:us";

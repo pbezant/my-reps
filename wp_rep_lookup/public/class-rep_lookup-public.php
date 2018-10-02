@@ -73,9 +73,9 @@ class Rep_lookup_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(),'', 'all' );
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/rep_lookup.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/rep_lookup.css', array(), '', 'all' );
 
 	}
 
@@ -100,10 +100,10 @@ class Rep_lookup_Public {
 		wp_enqueue_script( 'bootstrap', "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js", array('jquery') , '', false );
 
 
-		
-		wp_enqueue_script( 'google_places', "https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38", '', '', false );
+		$api_key = AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI;
+		wp_enqueue_script( 'google_places', "https://maps.google.com/maps/api/js?libraries=places&key=".$api_key.'', '', false );
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rep_lookup.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rep_lookup.js', array( 'jquery' ), '', false );
 
 	}
 
