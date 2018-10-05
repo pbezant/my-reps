@@ -68,8 +68,11 @@
             // 'schoolBoard',
             // 'specialPurposeOfficer'
         ]
-        let roles_mapped = roles.map(x => `roles=${x}`).join('&');
-        let queryString = '?'+$.param(params)+'&'+roles_mapped;
+
+        
+        // var roles_mapped = roles.map(x => `roles=${x}`).join('&');
+        var roles_mapped = roles.map(function(x){ return 'roles='+x}).join('&');
+        var queryString = '?'+$.param(params)+'&'+roles_mapped;
         
         // $.when($.getJSON(INFO_API, params )).then(function(data) {
         $.when($.getJSON(INFO_API+queryString)).then(function(data) {
