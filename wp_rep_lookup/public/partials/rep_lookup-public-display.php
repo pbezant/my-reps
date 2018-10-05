@@ -14,11 +14,9 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-
-
         <div class="container-fluid">
-                <!-- Update this tagline! -->
-                <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
+            <!-- Update this tagline! -->
+            <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
             <br />
             <!-- Add your call to action here! -->
             <div class="row">
@@ -27,10 +25,10 @@
                         <input type="text" class="form-control" placeholder="Enter your address to find who represents you" id="address" name="address">
                         <span class="input-group-append">
                         <button class="btn btn-info" type="submit" id="address-search"><i class='fa fa-search'></i> <span class='hidden-xs hidden-sm'>Search</span></button>
-                       <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
-                        </span> 
+                        <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
+                        </span>
                     </div>
-                   <div class='filter_level text-center'>
+                    <div class='filter_level text-center'>
                         <br />
                         <p class=''>
                             Show level of government:
@@ -85,6 +83,23 @@
                         <p class='text-center'><small><em>Note: Data comes from the <a target='_blank' href='https://developers.google.com/civic-information/'>Google Civic Information API</a>, which does not have 100% coverage of all representatives.<br />If you notice an issue with the data, please <a target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLScFpFTOkTpm0YoerLLprY_ySS9PRXLsu27SM01hebHqkefW2Q/viewform'>report it to Google</a>.</em></small></p>
                         <div id="tag-container" class="d-flex flex-wrap justify-content-around">
                         </div>
+                        <div id='state-container'>
+                            <br />
+                            <h3 class='text-center' id="state-name"></h3>
+                            <table id="state-results" class="table table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Representative</th>
+                                        <th class='hidden-xs hidden-sm'><i class='fa fa-institution'></i> Office</th>
+                                        <th class='hidden-xs'><i class='fa fa-map-marker'></i> Address</th>
+                                        <th><i class='fa fa-external-link'></i> Links</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                         <div id='local-container'>
                             <br />
                             <h3 class='text-center' id="local-name"></h3>
@@ -127,23 +142,7 @@
                             <h3 class='text-center' id="county-name-not-found"></h3>
                             <p>We couldn't find any representatives for this area</p>
                         </div>
-                        <div id='state-container'>
-                            <br />
-                            <h3 class='text-center' id="state-name"></h3>
-                            <table id="state-results" class="table table-responsive-sm">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Representative</th>
-                                        <th class='hidden-xs hidden-sm'><i class='fa fa-institution'></i> Office</th>
-                                        <th class='hidden-xs'><i class='fa fa-map-marker'></i> Address</th>
-                                        <th><i class='fa fa-external-link'></i> Links</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
+
                         <div id='federal-container'>
                             <h3 id='federal-name' class='text-center'>United States Federal Government</h3>
                             <table id="federal-results" class="table table-responsive-sm">
@@ -175,10 +174,10 @@
                     </div>
                 </div>
                 <div class='col-md-5 hidden-xs hidden-sm'>
-                    <img class='img-responsive img-fluid' src='<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/usa.png' title='The United States of America' alt='The United States of America' />
+                    <img class='img-fluid' src='images/usa.png' title='The United States of America' alt='The United States of America' />
                 </div>
             </div>
-             <!-- Modal -->
+            <!-- Modal -->
             <div class="modal" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -203,7 +202,7 @@
                             <% if (info.person.photoUrl) { %>
                                 <img class="img-rounded headshot" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                 <% } else { %>
-                                    <img class="img-rounded headshot" src="<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                                    <img class="img-rounded headshot" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                     <% } %>
                         </td>
                         <td>
@@ -237,7 +236,6 @@
                         </td>
                         <td>
                             <% if (info.channels || info.urls){ %>
-                             
                                 <span class='visible-xs-inline visible-sm-inline'>
                         <% if (info.channels){ %>
                         <% $.each(info.channels, function(i, channel){ %>
@@ -269,7 +267,7 @@
                 <% if (info.person.photoUrl) { %>
                 <img class="img-responsive align-self-center mr-3 w-25" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                 <% } else { %>
-                <img class="img-rounded headshot align-self-center mr-3 w-25" src="<?php echo plugin_dir_url( dirname( __FILE__, 2 ) )?>images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <img class="img-responsive align-self-center mr-3 w-25" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                 <% } %>
                 <div class="media-body">
                     <!-- Add your contact instructions here! -->
@@ -282,7 +280,7 @@
                         <% $.each(info.phones, function(i, phone){ %>
                             <% if ((i + 1) < info.phones.length){ %>
                                 <i class='fa fa-fw fa-phone'></i>
-                                <a href="tel:<%= phone %>"><%= phone %></a>
+                                <%= phone %>
                                     <br />
                                     <% } else { %>
                                         <i class='fa fa-fw fa-phone'></i>
@@ -310,9 +308,8 @@
                 </div>
             </div>
             </script>
-
         </div>
-    
+
     <div class='clearfix'></div>
     <div class="container-fluid">
         <div class="row" id="footer">

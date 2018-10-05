@@ -1,10 +1,11 @@
     const $ = jQuery.noConflict();
 
-    // var geocoder = new google.maps.Geocoder;
+    var geocoder = new google.maps.Geocoder;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-    //var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    
     // TXNORML KEY
-    var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 
+    //var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 
 
     var MAPS_KEY = API_KEY;
     var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
@@ -50,11 +51,28 @@
         $.address.parameter('address', encodeURI(address));
 
         var params = {
+            'key': API_KEY,
             'address': address,
-            'key': API_KEY
+            'includeOffices': true                         
         }
 
-        $.when($.getJSON(INFO_API, params)).then(function(data) {
+        var roles =[
+            'headOfState',
+            'headOfGovernment',
+            'deputyHeadOfGovernment',
+            'legislatorUpperBody',
+            'legislatorLowerBody',
+            'highestCourtJudge',
+            'judge'
+            // 'governmentOfficer',
+            // 'schoolBoard',
+            // 'specialPurposeOfficer'
+        ]
+        let roles_mapped = roles.map(x => `roles=${x}`).join('&');
+        let queryString = '?'+$.param(params)+'&'+roles_mapped;
+        
+        // $.when($.getJSON(INFO_API, params )).then(function(data) {
+        $.when($.getJSON(INFO_API+queryString)).then(function(data) {
             divisions = data['divisions'];
             officials = data['officials'];
             offices = data['offices'];
