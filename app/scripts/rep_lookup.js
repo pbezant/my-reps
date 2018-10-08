@@ -1061,12 +1061,12 @@ $('#el').spin('flower', 'red');
 
     var geocoder = new google.maps.Geocoder;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-    var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
+    //var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
     
     // TXNORML KEY
     //var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 
 
-    var MAPS_KEY = API_KEY;
+    var MAPS_KEY = window.API_KEY;
     var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
 
     // parsing out division IDs
@@ -1110,7 +1110,7 @@ $('#el').spin('flower', 'red');
         $.address.parameter('address', encodeURI(address));
 
         var params = {
-            'key': API_KEY,
+            'key': WINDOW.API_KEY,
             'address': address,
             'includeOffices': true                         
         }

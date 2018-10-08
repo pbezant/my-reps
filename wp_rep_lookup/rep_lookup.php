@@ -68,6 +68,14 @@ add_shortcode('rep-page', 'rep_page_shortcode');
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-rep_lookup.php';
 
+// function rep_lookup_add_settings_link( $links ) {
+//     $settings_link =  '<a href="'.admin_url('admin.php?page=rep_lookup').'">'.__('Settings').'</a>';
+//     array_push( $links, $settings_link );
+//   	return $links;
+// }
+
+// add_filter( "plugin_action_links_".plugin_basename( __FILE__ ), 'rep_lookup_add_settings_link' );
+
 /**
  * Begins execution of the plugin.
  *

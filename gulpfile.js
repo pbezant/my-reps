@@ -13,13 +13,15 @@ sass        = require('gulp-sass');
 sourceMaps  = require('gulp-sourcemaps');
 imagemin    = require('gulp-imagemin');
 minifyCSS   = require('gulp-minify-css');
-browserSync = require('browser-sync');
+//browserSync = require('browser-sync');
 autoprefixer = require('gulp-autoprefixer');
 gulpSequence = require('gulp-sequence').use(gulp);
 shell       = require('gulp-shell');
 plumber     = require('gulp-plumber');
-var browserify  = require('gulp-browserify');
+
 var rename = require('gulp-rename');
+var ssi = require("gulp-ssi");
+var connect = require('gulp-connect');
 
 var APP_NAME ="rep_lookup";
 
@@ -109,6 +111,11 @@ gulp.task('scripts-deploy', function() {
 
 
 gulp.task('build-wp-plugin', function(){
+    gulp.src('app/partials/*.html')
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(gulp.dest('wp_rep_lookup/templates'));
+
      gulp.src('dist/scripts/rep_lookup.js')
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
@@ -158,42 +165,50 @@ gulp.task('styles', function() {
                 //where to save our final, compressed css file
                 .pipe(gulp.dest('app/styles'))
                 //notify browserSync to refresh
-                .pipe(browserSync.reload({stream: true}));
+                .pipe(connect.reload());
 });
 
 //compiling our SCSS files for deployment
 gulp.task('styles-deploy', function() {
     //the initializer / master SCSS file, which will just be a file that imports everything
     return gulp.src('app/styles/scss/init.scss')
-                .pipe(plumber())
-                //include SCSS includes folder
-                .pipe(sass({
-                      includePaths: [
-                          'app/styles/scss',
-                      ]
-                }))
-                .pipe(autoprefixer({
-                  browsers: autoPrefixBrowserList,
-                  cascade:  true
-                }))
-                //the final filename of our combined css file
-                .pipe(concat(APP_NAME+'.css'))
-                .pipe(minifyCSS())
-                //where to save our final, compressed css file
-                .pipe(gulp.dest('dist/styles'));
+    .pipe(plumber())
+    //include SCSS includes folder
+    .pipe(sass({
+          includePaths: [
+              'app/styles/scss',
+          ]
+    }))
+    .pipe(autoprefixer({
+      browsers: autoPrefixBrowserList,
+      cascade:  true
+    }))
+    //the final filename of our combined css file
+    .pipe(concat(APP_NAME+'.css'))
+    .pipe(minifyCSS())
+    //where to save our final, compressed css file
+    .pipe(gulp.dest('dist/styles'));
 });
 
 
+ 
+gulp.task('connect', function() {
+  connect.server({
+    root: 'dist',
+    livereload: true
+  });
+});
+ 
+gulp.task('html', function () {
+  gulp.src('app/**/*.html')
+    .pipe(ssi())
+    .pipe(gulp.dest('dist'))
+    .pipe(connect.reload());
+});
+ 
+ 
 
 //basically just keeping an eye on all HTML files
-gulp.task('html', function() {
-    //watch any and all HTML files and refresh when something changes
-    return gulp.src('app/*.html')
-        .pipe(plumber())
-        .pipe(browserSync.reload({stream: true}))
-        //catch errors
-        .on('error', gutil.log);
-});
 
 //migrating over all HTML files for deployment
 gulp.task('html-deploy', function() {
@@ -201,6 +216,12 @@ gulp.task('html-deploy', function() {
     gulp.src('app/*')
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
+        .pipe(gulp.dest('dist'));
+
+    gulp.src('app/**/*.html')
+        //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        .pipe(ssi())
         .pipe(gulp.dest('dist'));
 
     //grab any hidden files too
@@ -246,13 +267,13 @@ gulp.task('scaffold', function() {
 //  startup the web server,
 //  start up browserSync
 //  compress all scripts and SCSS files
-gulp.task('default', ['browserSync', 'scripts', 'styles'], function() {
+gulp.task('default', ['connect','scripts', 'styles'], function() {
     //a list of watchers, so it will watch all of the following files waiting for changes
     gulp.watch('app/scripts/src/**', ['scripts']);
     gulp.watch('app/styles/scss/**', ['styles']);
     gulp.watch('app/images/**', ['images']);
-    gulp.watch('app/*.html', ['html']);
+    gulp.watch('app/**/*.html', ['html']);
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy'], 'html-deploy', 'build-wp-plugin'));
+gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy','html-deploy', 'build-wp-plugin']));
