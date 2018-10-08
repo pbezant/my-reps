@@ -1110,7 +1110,7 @@ $('#el').spin('flower', 'red');
         $.address.parameter('address', encodeURI(address));
 
         var params = {
-            'key': WINDOW.API_KEY,
+            'key': window.API_KEY,
             'address': address,
             'includeOffices': true                         
         }
