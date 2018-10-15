@@ -13,30 +13,32 @@ sass        = require('gulp-sass');
 sourceMaps  = require('gulp-sourcemaps');
 imagemin    = require('gulp-imagemin');
 minifyCSS   = require('gulp-minify-css');
-//browserSync = require('browser-sync');
+// browserSync = require('browser-sync');
 autoprefixer = require('gulp-autoprefixer');
 gulpSequence = require('gulp-sequence').use(gulp);
 shell       = require('gulp-shell');
 plumber     = require('gulp-plumber');
 
+var replace = require('gulp-replace');
 var rename = require('gulp-rename');
 var ssi = require("gulp-ssi");
 var connect = require('gulp-connect');
 
 var APP_NAME ="rep_lookup";
 
-gulp.task('browserSync', function() {
-    browserSync({
-        server: {
-            baseDir: "app/"
-        },
-        options: {
-            reloadDelay: 250,
-            open: false
-        },
-        notify: false
-    });
-});
+
+// gulp.task('browserSync', function() {
+//     browserSync({
+//         server: {
+//             baseDir: "app/"
+//         },
+//         options: {
+//             reloadDelay: 250,
+//             open: false
+//         },
+//         notify: false
+//     });
+// });
 
 
 //compressing images & handle SVG files
@@ -79,16 +81,16 @@ gulp.task('scripts', function() {
     // return gulp.src(['app/scripts/src/_includes/**/*.js', 'app/scripts/src/**/*.js'])
     return gulp.src(vendor_scripts)
                
-                 //prevent pipe breaking caused by errors from gulp plugins
-                .pipe(plumber())
-                //this is the filename of the compressed version of our JS
-                .pipe(concat('rep_lookup.js'))
-                //compress :D
-                // .pipe(uglify())
-                //catch errors
-                .on('error', gutil.log)
-                //where we will store our finalized, compressed script
-                .pipe(gulp.dest('app/scripts'))
+         //prevent pipe breaking caused by errors from gulp plugins
+        .pipe(plumber())
+        //this is the filename of the compressed version of our JS
+        .pipe(concat('rep_lookup.js'))
+        //compress :D
+        // .pipe(uglify())
+        //catch errors
+        .on('error', gutil.log)
+        //where we will store our finalized, compressed script
+        .pipe(gulp.dest('app/scripts'))
 });
 
 
@@ -114,6 +116,10 @@ gulp.task('build-wp-plugin', function(){
     gulp.src('app/partials/*.html')
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
+        .pipe(rename({
+            extname: ".php"
+        }))
+        //.pipe(replace("src='","src='<?php echo plugin_dir_url( __FILE__ )?>"))
         .pipe(gulp.dest('wp_rep_lookup/templates'));
 
      gulp.src('dist/scripts/rep_lookup.js')
@@ -267,7 +273,7 @@ gulp.task('scaffold', function() {
 //  startup the web server,
 //  start up browserSync
 //  compress all scripts and SCSS files
-gulp.task('default', ['connect','scripts', 'styles'], function() {
+gulp.task('default', ['connect','html','scripts', 'styles'], function() {
     //a list of watchers, so it will watch all of the following files waiting for changes
     gulp.watch('app/scripts/src/**', ['scripts']);
     gulp.watch('app/styles/scss/**', ['styles']);
@@ -276,4 +282,4 @@ gulp.task('default', ['connect','scripts', 'styles'], function() {
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', gulpSequence('clean', 'scaffold', ['scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy','html-deploy', 'build-wp-plugin']));
+gulp.task('deploy', gulpSequence('clean', 'scaffold', ['html', 'html-deploy', 'scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy', 'build-wp-plugin']));

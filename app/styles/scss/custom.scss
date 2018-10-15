@@ -1,83 +1,76 @@
-// @import url(https://fonts.googleapis.com/css?family=Bitter:400,400italic,700);
+.rep-page{
+    h1 {
+        font-size: 48px;
+        padding-bottom: 10px;
+    }
 
-// body {
-//     font-size: 16px;
-//     font-family: 'Open Sans', 'Arial', sans-serif;
-// }
+    h1 a, h1 a:hover {
+        
+        text-decoration: none;
+    }
 
-// h1, h2, h3, h4, h5 {
-//     font-family: 'Bitter', serif;
-//     font-weight: bold;
-// }
+    .table > thead > tr > th { 
+        white-space: nowrap;
+    }
 
-h1 {
-    font-size: 48px;
-    padding-bottom: 10px;
-}
+    .about {
+        font-size: 90%;
+    }
 
-h1 a, h1 a:hover {
-    
-    text-decoration: none;
-}
+    #tag-container{
+        display:flex;
+        justify-content:space-around;
+        flex-wrap:wrap; 
+    }
 
-.table > thead > tr > th { 
-    white-space: nowrap;
-}
+    /* center the nav pills */
+    .centered-pills {
+        text-align: center
+    }
+    .centered-pills ul.nav-pills {
+        display: inline-block
+    }
+    .centered-pills li {
+        display: inline
+    }
+    .centered-pills a {
+        float: left
+    }
+    * html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
+        display: inline
+    }
 
-.about {
-    font-size: 90%;
-}
+    .headshot {
+        max-width: 50px;
+    }
 
-/* center the nav pills */
-.centered-pills {
-    text-align: center
-}
-.centered-pills ul.nav-pills {
-    display: inline-block
-}
-.centered-pills li {
-    display: inline
-}
-.centered-pills a {
-    float: left
-}
-* html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
-    display: inline
-}
+    .nowrap {
+        white-space: nowrap;
+    }
 
-.headshot {
-    max-width: 50px;
-}
+    .label-dem {
+        color: #0294C7;
+    }
 
-.nowrap {
-    white-space: nowrap;
-}
+    .label-rep {
+        color: #D1220E;
+    }
 
-.label-dem {
-    color: #0294C7;
-}
+    .label-ind {
+        color: #418B07;
+    }
 
-.label-rep {
-    color: #D1220E;
-}
+    #contactModal {
+        font-size: 0.9em;
+    }
 
-.label-ind {
-    color: #418B07;
-}
+    .filter_level label {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
 
-#contactModal {
-    font-size: 0.9em;
-}
+    #results-nav span {
+        padding-right: 20px;
+    }
 
-.filter_level label {
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
-#results-nav span {
-    padding-right: 20px;
-}
-
-.input-group{
-    display:flex !important;
 }

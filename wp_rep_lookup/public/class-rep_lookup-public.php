@@ -75,7 +75,7 @@ class Rep_lookup_Public {
 
 	
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/rep_lookup.css', array(), '', 'all' );
+		// wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/rep_lookup.css', array(), '', 'all' );
 
 	}
 
@@ -98,20 +98,41 @@ class Rep_lookup_Public {
 		 * class.
 		 */
 		
-		$api_key = get_option('Rep_lookup')['google_api_key']; 
 		
-		wp_enqueue_script( 'google_places', "https://maps.google.com/maps/api/js?libraries=places&key=".$api_key."",'', false );
+		
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rep_lookup.js', array( 'jquery' ), '', false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rep_lookup.js', array( 'jquery' ), '', false );
 
 	}
 
+	public function enqueue_google(){
+		// $api_key = get_option('Rep_lookup')['google_api_key']; 
+		// wp_enqueue_script( 'google_places', "https://maps.google.com/maps/api/js?libraries=places&key=".$api_key,'', false );
+
+	}
+	
 	public function enqueue_bootstrap(){
 		
-			wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(),'', 'all' );
+			// wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(),'', 'all' );
 
 	}
 
-	
+	public function enqueue_shortcode(){
+		global $post;
+		if( has_shortcode( $post->post_content, 'rep-page')){
+
+			$api_key = get_option('Rep_lookup')['google_api_key']; 
+			wp_enqueue_script( 'google_places', "https://maps.google.com/maps/api/js?libraries=places&key=".$api_key,'', false );
+
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rep_lookup.js', array( 'jquery' ), '', false );
+
+			
+				// wp_enqueue_script( 'bootstrap-js', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), true); // all the bootstrap javascript goodness
+				// wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(''),'', 'all' );
+			
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/rep_lookup.css', array(), '', 'all' );
+			
+		}
+	}
 
 }

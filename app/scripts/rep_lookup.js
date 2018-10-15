@@ -1279,7 +1279,7 @@ $('#el').spin('flower', 'red');
                 }
             });
 
-            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + MAPS_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
+            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + window.API_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
 
             var template = new EJS({ 'text': $('#tableGuts').html() });
 

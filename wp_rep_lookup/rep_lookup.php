@@ -58,23 +58,18 @@ function deactivate_rep_lookup() {
 register_activation_hook( __FILE__, 'activate_rep_lookup' );
 register_deactivation_hook( __FILE__, 'deactivate_rep_lookup' );
 
-function rep_page_shortcode(){
-	include 'public/partials/rep_lookup-public-display.php';
-}
-add_shortcode('rep-page', 'rep_page_shortcode');
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-rep_lookup.php';
 
-// function rep_lookup_add_settings_link( $links ) {
-//     $settings_link =  '<a href="'.admin_url('admin.php?page=rep_lookup').'">'.__('Settings').'</a>';
-//     array_push( $links, $settings_link );
-//   	return $links;
-// }
-
-// add_filter( "plugin_action_links_".plugin_basename( __FILE__ ), 'rep_lookup_add_settings_link' );
+function rep_page_shortcode(){
+	include 'public/partials/rep_lookup-public-display.php';
+	// include plugin_dir_path( __FILE__ ) .'templates/lookup-page.php';
+}
+add_shortcode('rep-page', 'rep_page_shortcode');	
 
 /**
  * Begins execution of the plugin.

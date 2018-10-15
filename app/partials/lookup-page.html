@@ -1,4 +1,4 @@
-    <div class='main-content'>
+    <div class='main-content rep-page'>
         <div class="container">
             <!-- Update this tagline! -->
             <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
