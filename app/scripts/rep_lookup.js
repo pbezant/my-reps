@@ -1061,7 +1061,6 @@ $('#el').spin('flower', 'red');
 
     var geocoder = new google.maps.Geocoder;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
-    //var API_KEY = "AIzaSyBP7187R1HuHGyOg9_OHWpRAdbxsKkkZ38";
     
     // TXNORML KEY
     //var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 

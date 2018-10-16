@@ -26,21 +26,6 @@ var connect = require('gulp-connect');
 
 var APP_NAME ="rep_lookup";
 
-
-// gulp.task('browserSync', function() {
-//     browserSync({
-//         server: {
-//             baseDir: "app/"
-//         },
-//         options: {
-//             reloadDelay: 250,
-//             open: false
-//         },
-//         notify: false
-//     });
-// });
-
-
 //compressing images & handle SVG files
 gulp.task('images', function(tmp) {
     gulp.src(['app/images/*.jpg', 'app/images/*.png'])
@@ -110,33 +95,14 @@ gulp.task('scripts-deploy', function() {
 
    
 });
-
-
 gulp.task('build-wp-plugin', function(){
-    gulp.src('app/partials/*.html')
+    gulp.src('dist/**/*',{base:'./'})
         //prevent pipe breaking caused by errors from gulp plugins
-        .pipe(plumber())
-        .pipe(rename({
-            extname: ".php"
-        }))
-        //.pipe(replace("src='","src='<?php echo plugin_dir_url( __FILE__ )?>"))
-        .pipe(gulp.dest('wp_rep_lookup/templates'));
+        .pipe(plumber())   
+        .pipe(gulp.dest('wp_rep_lookup'));
 
-     gulp.src('dist/scripts/rep_lookup.js')
-        //prevent pipe breaking caused by errors from gulp plugins
-        .pipe(plumber())
-        .pipe(gulp.dest('wp_rep_lookup/public/js'));
-
-    gulp.src('dist/styles/rep_lookup.css')
-        //prevent pipe breaking caused by errors from gulp plugins
-        .pipe(plumber())
-        .pipe(gulp.dest('wp_rep_lookup/public/css'));
-
-    gulp.src(['dist/images/**/*', '!dist/images/README'])
-        //prevent pipe breaking caused by errors from gulp plugins
-        .pipe(plumber())
-        .pipe(gulp.dest('wp_rep_lookup/images'));
 });
+
 
 //compiling our SCSS files
 gulp.task('styles', function() {
@@ -219,12 +185,13 @@ gulp.task('html', function () {
 //migrating over all HTML files for deployment
 gulp.task('html-deploy', function() {
     //grab everything, which should include htaccess, robots, etc
-    gulp.src('app/*')
+    gulp.src('app/**/*.html')
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
+        .pipe(ssi())
         .pipe(gulp.dest('dist'));
 
-    gulp.src('app/**/*.html')
+    gulp.src('app/*')
         //prevent pipe breaking caused by errors from gulp plugins
         .pipe(plumber())
         .pipe(ssi())
@@ -282,4 +249,4 @@ gulp.task('default', ['connect','html','scripts', 'styles'], function() {
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', gulpSequence('clean', 'scaffold', ['html', 'html-deploy', 'scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy', 'build-wp-plugin']));
+gulp.task('deploy', ['clean', 'scaffold', 'html', 'html-deploy', 'scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy']);

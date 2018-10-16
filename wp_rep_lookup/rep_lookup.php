@@ -66,10 +66,21 @@ register_deactivation_hook( __FILE__, 'deactivate_rep_lookup' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-rep_lookup.php';
 
 function rep_page_shortcode(){
-	include 'public/partials/rep_lookup-public-display.php';
-	// include plugin_dir_path( __FILE__ ) .'templates/lookup-page.php';
+
+	 $url=plugin_dir_url(__FILE__)."dist/index.html";
+     $iframe = "<iframe allowfullscreen id='rep-page' class='' src='".$url."' style='width:100%; height:300vh; border:0;'></iframe>";
+
+	return $iframe;
 }
 add_shortcode('rep-page', 'rep_page_shortcode');	
+
+add_action ( 'wp_head', 'my_js_variables' );
+function my_js_variables(){ ?>
+  <script id="key" type="text/javascript">
+    var WP_API_KEY = "<?php echo get_option('Rep_lookup')['google_api_key']; ?>";
+  </script><?php
+}
+
 
 /**
  * Begins execution of the plugin.
