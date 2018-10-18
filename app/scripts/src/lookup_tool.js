@@ -106,9 +106,9 @@
             API_KEY = data.API_KEY;
             console.log('new API_KEY',API_KEY);
         }else{
-            //API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
-            //console.log('old API_KEY', API_KEY);
-            console.log('No API key set');
+            API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
+            console.log('old API_KEY', API_KEY);
+            //console.log('No API key set');
         }
     }
 
