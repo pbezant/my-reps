@@ -1,13 +1,68 @@
     const $ = jQuery.noConflict();
 
+     $(document).ready(function($) {
+        getKey();
+
+        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('address'), { types: ['address'] });
+
+        $("#address").val(convertToPlainString($.address.parameter('address')));
+
+        if ($("#address").val())
+            addressSearch();
+
+        $('#address-search').click(function() {
+            addressSearch();
+        });
+
+        var results_level = $.address.parameter('results_level');
+        if (results_level == undefined)
+            results_level = ['local', 'county', 'state', 'federal'];
+
+        // set levels of government checkboxes
+        if (results_level.indexOf("local") >= 0)
+            $('#show_local_results').prop('checked', true);
+        if (results_level.indexOf("county") >= 0)
+            $('#show_county_results').prop('checked', true);
+        if (results_level.indexOf("state") >= 0)
+            $('#show_state_results').prop('checked', true);
+        if (results_level.indexOf("federal") >= 0)
+            $('#show_federal_results').prop('checked', true);
+
+        $("#results-nav a").click(function(e) {
+            e.preventDefault();
+            var scroll_to = $($("#" + e.target.id).attr('href'));
+            $('html, body').animate({
+                scrollTop: scroll_to.offset().top
+            }, 1000);
+        });
+
+        $('#find-me').click(function() {
+            findMe();
+            return false;
+        });
+
+        $(":text").keydown(function(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            if (key === 13) {
+                $('#address-search').click();
+                return false;
+            }
+        });
+    });
+
+
+
+
+
+
     var geocoder = new google.maps.Geocoder;
     
     
     // TXNORML KEY
     //var API_KEY = "AIzaSyDoZS07ZPfGy8HYYYwIvYE2Pa_Is0mCFZI"; 
 
-    var MAPS_KEY = window.API_KEY;
-    var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places";
+
+    var MAPS_API = "https://maps.google.com/maps/api/js?libraries=places"; 
 
     // parsing out division IDs
     var federal_pattern = "ocd-division/country:us";
@@ -40,17 +95,38 @@
     var all_people = {};
     var pseudo_id = 1;
 
+    var data;
+    function getKey(){
+        var params = location.href.split('?')[1].split('&');
+        data = {};
+        for (x in params){
+            data[params[x].split('=')[0]] = params[x].split('=')[1];
+        }
+        if(data.API_KEY){
+            API_KEY = data.API_KEY;
+            console.log('new API_KEY',API_KEY);
+        }else{
+            //API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
+            //console.log('old API_KEY', API_KEY);
+            console.log('No API key set');
+        }
+    }
 
     var address, divisions, officials, offices;
     var INFO_API = 'https://www.googleapis.com/civicinfo/v2/representatives';
+    var API_KEY;
+  
+
     function addressSearch() {
 
         address = $('#address').val();
         // $.address.parameter('address', encodeURIComponent(address));
         $.address.parameter('address', encodeURI(address));
 
+
+
         var params = {
-            'key': window.API_KEY,
+            'key': API_KEY,
             'address': address,
             'includeOffices': true                         
         }
@@ -74,6 +150,7 @@
         var queryString = '?'+$.param(params)+'&'+roles_mapped;
         
         // $.when($.getJSON(INFO_API, params )).then(function(data) {
+        
         $.when($.getJSON(INFO_API+queryString)).then(function(data) {
             divisions = data['divisions'];
             officials = data['officials'];
@@ -219,7 +296,7 @@
                 }
             });
 
-            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + window.API_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
+            $("#address-image").html("<img class='img-responsive img-thumbnail' src='https://maps.googleapis.com/maps/api/staticmap?key=" + API_KEY + "&size=600x200&maptype=roadmap&markers=" + encodeURIComponent(address) + "' alt='" + address + "' title='" + address + "' />");
 
             var template = new EJS({ 'text': $('#tableGuts').html() });
 

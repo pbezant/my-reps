@@ -27,20 +27,15 @@
     <!-- scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        window.jQuery || document.write('<script src="js/_includes/jquery.min.js"><\/script>')
-        
-        var API_KEY = "AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw";
-        // if(window.WP_API_KEY){
-        //     API_KEY = window.WP_API_KEY;
-        // }else{
-        //     //API_KEY = "AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw";
-        //     API_KEY = "not the api key";
-        // }
-        // console.log(API_KEY);
+    window.jQuery || document.write('<script src="js/_includes/jquery.min.js"><\/script>')
+
     </script>
+     <script>
+        //var API_KEY = "AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw";
+    </script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw"></script>
     
-    <!--bootstrap -->
-    
+    <!--bootstrap --> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -51,7 +46,7 @@
     <script src="scripts/rep_lookup.js"></script>
 </head>
 
-<body>
+<body id="lookup-display">
     <div class='main-content rep-page'>
         <div class="container">
             <!-- Update this tagline! -->
@@ -67,7 +62,7 @@
                         <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
                         </span>
                     </div>
-<!--                     <div class='filter_level text-center'>
+                    <div class='filter_level text-center'>
                         <br />
                         <p class=''>
                             Show level of government:
@@ -86,7 +81,7 @@
                                 <input type="checkbox" id="show_federal_results" value="Federal"> Federal
                             </label>
                         </div>
-                    </div> -->
+                    </div>
                     <br />
                 </div>
             </div>
@@ -360,58 +355,10 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw"></script>
     <script type='text/javascript'>
     //<![CDATA[
 
-    jQuery(document).ready(function($) {
-
-        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('address'), { types: ['address'] });
-
-        $("#address").val(convertToPlainString($.address.parameter('address')));
-
-        if ($("#address").val())
-            addressSearch();
-
-        $('#address-search').click(function() {
-            addressSearch();
-        });
-
-        var results_level = $.address.parameter('results_level');
-        if (results_level == undefined)
-            results_level = ['local', 'county', 'state', 'federal'];
-
-        // set levels of government checkboxes
-        if (results_level.indexOf("local") >= 0)
-            $('#show_local_results').prop('checked', true);
-        if (results_level.indexOf("county") >= 0)
-            $('#show_county_results').prop('checked', true);
-        if (results_level.indexOf("state") >= 0)
-            $('#show_state_results').prop('checked', true);
-        if (results_level.indexOf("federal") >= 0)
-            $('#show_federal_results').prop('checked', true);
-
-        $("#results-nav a").click(function(e) {
-            e.preventDefault();
-            var scroll_to = $($("#" + e.target.id).attr('href'));
-            $('html, body').animate({
-                scrollTop: scroll_to.offset().top
-            }, 1000);
-        });
-
-        $('#find-me').click(function() {
-            findMe();
-            return false;
-        });
-
-        $(":text").keydown(function(e) {
-            var key = e.keyCode ? e.keyCode : e.which;
-            if (key === 13) {
-                $('#address-search').click();
-                return false;
-            }
-        });
-    });
+   
     //]]>
 
     </script>

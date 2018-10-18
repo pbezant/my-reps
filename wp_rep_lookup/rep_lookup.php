@@ -67,20 +67,64 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-rep_lookup.php';
 
 function rep_page_shortcode(){
 
-	 $url=plugin_dir_url(__FILE__)."dist/index.html";
-     $iframe = "<iframe allowfullscreen id='rep-page' class='' src='".$url."' style='width:100%; height:300vh; border:0;'></iframe>";
+	 $url=plugin_dir_url(__FILE__)."dist/index.html?API_KEY=".get_option('Rep_lookup')['google_api_key'];
+     $iframe = "<iframe allowfullscreen id='rep-page-iframe' src='".$url."' width='100%' height='2500em' scrolling='no' marginheight='0' frameborder='0' border='0'></iframe>";
 
-	return $iframe;
+	echo $iframe;
 }
 add_shortcode('rep-page', 'rep_page_shortcode');	
 
-add_action ( 'wp_head', 'my_js_variables' );
-function my_js_variables(){ ?>
+function local_css(){
+  ?>
+   <style>
+    .filter-level{
+      display: none;
+    }
+  </style>
+  <?php
+}
+//add_action ( 'wp_head', 'local_css' );
+
+
+function js_variables(){ ?>
+ 
   <script id="key" type="text/javascript">
-    var WP_API_KEY = "<?php echo get_option('Rep_lookup')['google_api_key']; ?>";
-  </script><?php
+
+   function getDocHeight(doc) {
+    doc = doc || document;
+    // stackoverflow.com/questions/1145850/
+    var body = doc.body, html = doc.documentElement;
+    var height = Math.max( body.scrollHeight, body.offsetHeight, 
+        html.clientHeight, html.scrollHeight, html.offsetHeight );
+    return height;
+  }
+
+  function setIframeHeight(id) {
+    var ifrm = document.getElementById(id);
+    var doc = ifrm.contentDocument? ifrm.contentDocument: 
+        ifrm.contentWindow.document;
+    ifrm.style.visibility = 'hidden';
+    ifrm.style.height = "10px"; // reset to minimal height ...
+    // IE opt. for bing/msn needs a bit added or scrollbar appears
+    ifrm.style.height = getDocHeight( doc ) + 4 + "px";
+    ifrm.style.visibility = 'visible';
 }
 
+if(document.addEventListener){
+    //yourIFrameObject.contentWindow.document.addEventListener('keyup', yourFunction, false);
+    window.frames[0].document.addEventListener('keyup', setIframeHeight(this.id), false);
+}
+else{
+//for IE8
+    window.frames[0].contentWindow.document.attachEvent('onkeyup', setIframeHeight(this.id));
+}
+
+
+  </script>
+
+  <?php
+}
+//add_action ( 'wp_head', 'js_variables' );
 
 /**
  * Begins execution of the plugin.

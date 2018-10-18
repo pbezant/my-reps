@@ -240,7 +240,7 @@ gulp.task('scaffold', function() {
 //  startup the web server,
 //  start up browserSync
 //  compress all scripts and SCSS files
-gulp.task('default', ['connect','html','scripts', 'styles'], function() {
+gulp.task('default', ['connect','html', 'scripts', 'styles'], function() {
     //a list of watchers, so it will watch all of the following files waiting for changes
     gulp.watch('app/scripts/src/**', ['scripts']);
     gulp.watch('app/styles/scss/**', ['styles']);
@@ -249,4 +249,4 @@ gulp.task('default', ['connect','html','scripts', 'styles'], function() {
 });
 
 //this is our deployment task, it will set everything for deployment-ready files
-gulp.task('deploy', ['clean', 'scaffold', 'html', 'html-deploy', 'scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy']);
+gulp.task('deploy', ['clean', 'scaffold', 'html', 'html-deploy', 'scripts', 'scripts-deploy', 'styles-deploy', 'images-deploy', 'build-wp-plugin']);
