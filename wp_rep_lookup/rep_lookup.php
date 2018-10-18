@@ -70,7 +70,7 @@ function rep_page_shortcode(){
 	 $url=plugin_dir_url(__FILE__)."dist/index.html?API_KEY=".get_option('Rep_lookup')['google_api_key'];
      $iframe = "<iframe allowfullscreen id='rep-page-iframe' src='".$url."' width='100%' height='2500em' scrolling='no' marginheight='0' frameborder='0' border='0'></iframe>";
 
-	echo $iframe;
+	return $iframe;
 }
 add_shortcode('rep-page', 'rep_page_shortcode');	
 
