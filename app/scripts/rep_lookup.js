@@ -1066,7 +1066,7 @@ $('#el').spin('flower', 'red');
 
         $("#address").val(convertToPlainString($.address.parameter('address')));
 
-        if ($("#address").val())
+        if ($("#address").val()!=undefined)
             addressSearch();
 
         $('#address-search').click(function() {
@@ -1164,9 +1164,11 @@ $('#el').spin('flower', 'red');
         if(data.API_KEY){
             API_KEY = data.API_KEY;
             console.log('new API_KEY',API_KEY);
+        }else if(location.hostname = 'localhost'){
+            API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
+            console.log('old API_KEY', API_KEY);
+            
         }else{
-            //API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
-            //console.log('old API_KEY', API_KEY);
             console.log('No API key set');
         }
     }
@@ -1191,16 +1193,16 @@ $('#el').spin('flower', 'red');
         }
 
         var roles =[
-            'headOfState',
-            'headOfGovernment',
-            'deputyHeadOfGovernment',
-            'legislatorUpperBody',
-            'legislatorLowerBody',
-            'highestCourtJudge',
-            'judge'
+            // 'headOfState',
+            // 'headOfGovernment',
+            // 'deputyHeadOfGovernment',
+            // 'legislatorUpperBody',
+            // 'legislatorLowerBody',
+            // 'highestCourtJudge',
+            // 'judge'
             // 'governmentOfficer',
             // 'schoolBoard',
-            // 'specialPurposeOfficer'
+            // 'specialPurposeOfficer',
         ]
 
         

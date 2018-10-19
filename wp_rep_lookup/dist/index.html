@@ -30,9 +30,7 @@
     window.jQuery || document.write('<script src="js/_includes/jquery.min.js"><\/script>')
 
     </script>
-     <script>
-        //var API_KEY = "AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw";
-    </script>
+    
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=places&key=AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw"></script>
     
     <!--bootstrap --> 
@@ -46,9 +44,9 @@
     <script src="scripts/rep_lookup.js"></script>
 </head>
 
-<body id="lookup-display">
+<body>
     <div class='main-content rep-page'>
-        <div class="container">
+        <div class="container-fluid">
             <!-- Update this tagline! -->
             <p class='lead'>Enter your address to <strong>find and contact</strong> your federal, state, county and local elected representatives</p>
             <br />
@@ -62,7 +60,7 @@
                         <!--  <button class="btn btn-default" type="submit" id="find-me"><i class='fa fa-crosshairs'></i> <span class='hidden-xs hidden-sm'>Find me</span> </button> -->
                         </span>
                     </div>
-                    <div class='filter_level text-center'>
+                    <div class='filter_level text-center' style="display:block;">
                         <br />
                         <p class=''>
                             Show level of government:
@@ -109,9 +107,9 @@
                     <a id="state-name-nav" href="#state-name"></a>
                   </span>
                             <span id='fed-nav'>
-                    <a id="federal-name-nav" href="#federal-name">Federal</a></li>
+                    <a id="federal-name-nav" href="#federal-name">Federal</a>
                   </span>
-                            </ul>
+                           
                         </p>
                         <hr />
                         <p class='text-center'><small><em>Note: Data comes from the <a target='_blank' href='https://developers.google.com/civic-information/'>Google Civic Information API</a>, which does not have 100% coverage of all representatives.<br />If you notice an issue with the data, please <a target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLScFpFTOkTpm0YoerLLprY_ySS9PRXLsu27SM01hebHqkefW2Q/viewform'>report it to Google</a>.</em></small></p>
@@ -236,7 +234,7 @@
                             <% if (info.person.photoUrl) { %>
                                 <img class="img-rounded headshot" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                 <% } else { %>
-                                    <img class="img-rounded headshot" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                                    <img class="img-rounded headshot" src="./images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                                     <% } %>
                         </td>
                         <td>
@@ -301,7 +299,7 @@
                 <% if (info.person.photoUrl) { %>
                 <img class="img-responsive align-self-center mr-3 w-25" src="<%= info.person.photoUrl %>" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                 <% } else { %>
-                <img class="img-responsive align-self-center mr-3 w-25" src="/images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
+                <img class="img-responsive align-self-center mr-3 w-25" src="./images/blank-person.jpg" alt="<%= info.person.name %>" title="<%= info.person.name %>" />
                 <% } %>
                 <div class="media-body">
                     <!-- Add your contact instructions here! -->
@@ -355,13 +353,6 @@
             </div>
         </div>
     </div>
-    <script type='text/javascript'>
-    //<![CDATA[
-
-   
-    //]]>
-
-    </script>
 
 </body>
 

@@ -7,7 +7,7 @@
 
         $("#address").val(convertToPlainString($.address.parameter('address')));
 
-        if ($("#address").val())
+        if ($("#address").val()!=undefined)
             addressSearch();
 
         $('#address-search').click(function() {
@@ -105,10 +105,12 @@
         if(data.API_KEY){
             API_KEY = data.API_KEY;
             console.log('new API_KEY',API_KEY);
-        }else{
+        }else if(location.hostname = 'localhost'){
             API_KEY ='AIzaSyDWV3t6w5_eYmyrtkpXcpbwWoGkAUFnYYw';
             console.log('old API_KEY', API_KEY);
-            //console.log('No API key set');
+            
+        }else{
+            console.log('No API key set');
         }
     }
 
@@ -132,16 +134,16 @@
         }
 
         var roles =[
-            'headOfState',
-            'headOfGovernment',
-            'deputyHeadOfGovernment',
-            'legislatorUpperBody',
-            'legislatorLowerBody',
-            'highestCourtJudge',
-            'judge'
+            // 'headOfState',
+            // 'headOfGovernment',
+            // 'deputyHeadOfGovernment',
+            // 'legislatorUpperBody',
+            // 'legislatorLowerBody',
+            // 'highestCourtJudge',
+            // 'judge'
             // 'governmentOfficer',
             // 'schoolBoard',
-            // 'specialPurposeOfficer'
+            // 'specialPurposeOfficer',
         ]
 
         

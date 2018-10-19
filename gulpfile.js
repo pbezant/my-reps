@@ -76,6 +76,7 @@ gulp.task('scripts', function() {
         .on('error', gutil.log)
         //where we will store our finalized, compressed script
         .pipe(gulp.dest('app/scripts'))
+        .pipe(gulp.dest('dist/scripts'))
 });
 
 

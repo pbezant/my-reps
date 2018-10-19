@@ -68,7 +68,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-rep_lookup.php';
 function rep_page_shortcode(){
 
 	 $url=plugin_dir_url(__FILE__)."dist/index.html?API_KEY=".get_option('Rep_lookup')['google_api_key'];
-     $iframe = "<iframe allowfullscreen id='rep-page-iframe' src='".$url."' width='100%' height='2500em' scrolling='no' marginheight='0' frameborder='0' border='0'></iframe>";
+     $iframe = "<iframe allowfullscreen id='rep-page-iframe' src='".$url."' width='100%' height='1500em' scrolling='yes' marginheight='0' frameborder='0' border='0'></iframe>";
 
 	return $iframe;
 }
